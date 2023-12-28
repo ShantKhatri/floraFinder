@@ -7,131 +7,36 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
+  FlatList,
 } from "react-native";
 import Modal, { ReactNativeModal } from "react-native-modal";
-const PlantCard = () => {
-  const { common_name, scientific_name, image_url, synonyms, links } = {
-    id: 128860,
-    common_name: "Narrow-leaf plantain",
-    slug: "plantago-lanceolata",
-    scientific_name: "Plantago lanceolata",
-    year: 1753,
-    bibliography: "Sp. Pl.: 113 (1753)",
-    author: "L.",
-    status: "accepted",
-    rank: "species",
-    family_common_name: null,
-    genus_id: 6597,
-    image_url:
-      "https://bs.plantnet.org/image/o/f8d7d6fe52e36d04f5ad1fc03f46f604d5c3cc43",
-    synonyms: [
-      "Plantago intermedia",
-      "Plantago lanceolata var. communis",
-      "Plantago lanceifolia",
-      "Arnoglossum lanceolatum var. ramosum",
-      "Plantago lanceolata f. eriophora",
-      "Plantago lanceolata var. dubia",
-      "Plantago lanceolata f. pleiocephala",
-      "Plantago lanceolata var. eriophylla",
-      "Plantago lanceolata var. mediterranea",
-      "Plantago glareosa",
-      "Plantago pseudopatagonica",
-      "Plantago lanceolata subvar. eriophora",
-      "Plantago dalmatica",
-      "Plantago lanceolata var. bakeri",
-      "Plantago linkii",
-      "Plantago lanceolata var. angustifolia",
-      "Plantago sylvatica",
-      "Plantago orientalis var. lycia",
-      "Plantago lanceolata var. montana",
-      "Plantago lanceolata subsp. eriophora",
-      "Plantago lanceolata f. coarctata",
-      "Plantago nutans",
-      "Plantago lanceolata subvar. lasiophylla",
-      "Plantago lanceolata var. eriophora",
-      "Plantago dubia",
-      "Plantago ambigua",
-      "Plantago eriophora",
-      "Plantago variabilis",
-      "Plantago hungarica",
-      "Plantago yezomaritima",
-      "Plantago lanceolata var. graminifolia",
-      "Plantago elata",
-      "Plantago schottii",
-      "Plantago timbalii",
-      "Plantago lanceolata var. capitellata",
-      "Plantago lanceolata subvar. euryphylla",
-      "Plantago lanceolata f. lanuginosa",
-      "Plantago abyssinica",
-      "Plantago lanceolata subsp. lanuginosa",
-      "Plantago lanceolata var. minima",
-      "Plantago irrigua",
-      "Plantago lanceolata var. latifolia",
-      "Plantago attenuata",
-      "Plantago nigricans",
-      "Arnoglossum lanceolatum var. trinervium",
-      "Plantago lanuginosa",
-      "Plantago lanceolata var. sphaerostachya",
-      "Plantago japonica var. yezomaritima",
-      "Plantago lanceolata subvar. sphaerostachya",
-      "Plantago lanceolata var. contigua",
-      "Plantago leiopetala",
-      "Plantago lanceolata var. timbalii",
-      "Plantago lanceolata f. macrostachya",
-      "Plantago lanceolata var. sylvatica",
-      "Plantago lanceolata subvar. eurhiza",
-      "Plantago preslii",
-      "Lagopus lanceolatus",
-      "Plantago byzantina",
-      "Plantago fontis-curvae",
-      "Plantago media var. prolifera",
-      "Plantago flexuosa",
-      "Plantago lanceolata var. minor",
-      "Plantago lanceolata f. composita",
-      "Plantago lanceolata var. alpina",
-      "Plantago azorica",
-      "Plantago lanceolata var. erecta",
-      "Plantago sphaerostachys",
-      "Plantago kurdica",
-      "Plantago orientalis",
-      "Arnoglossum lanceolatum var. roseum",
-      "Plantago lanceolata var. capitata",
-      "Plantago major f. yezomaritima",
-      "Plantago lanceolata f. bifurca",
-      "Plantago mediterranea",
-      "Plantago lanceolata var. multinervia",
-      "Plantago glauca",
-      "Plantago contorta",
-      "Plantago lanceolata subsp. capitata",
-      "Plantago sphaerostachya",
-      "Plantago lanceolata var. polystachia",
-      "Plantago lanceolata var. maritima",
-      "Lagopus timbali",
-      "Arnoglossum lanceolatum",
-      "Plantago glabriflora",
-      "Plantago longistipes",
-      "Plantago succisa",
-      "Plantago trinervis",
-      "Plantago capitata",
-      "Plantago lanceolata subsp. altissima",
-      "Plantago longiscapa",
-      "Plantago lanceolata var. lanuginosa",
-    ],
-    genus: "Plantago",
-    family: "Plantaginaceae",
-    links: {
-      self: "/api/v1/species/plantago-lanceolata",
-      plant: "/api/v1/plants/plantago-lanceolata",
-      genus: "/api/v1/genus/plantago",
-    },
-  };
-
+import colors from "../variables/colors";
+const PlantCard = ({ plant }) => {
   const [openModal, setOpenModal] = useState(false);
+
+  const { common_name, scientific_name, image_url, synonyms, links } = plant;
 
   const handleLinkPress = (url) => {
     Linking.openURL(url);
   };
   const synonymsText = [synonyms[0], synonyms[1], synonyms[2]].join(", ");
+
+  // const synonymsShow = () => {
+  //   return (
+  //     <FlatList
+  //       data={synonyms}
+  //       keyExtractor={(item, index) => index.toString()}
+  //       // horizontal={true}
+  //       // showsHorizontalScrollIndicator={false}
+  //       contentContainerStyle={styles.listContainer}
+  //       renderItem={({ item }) => (
+  //         <TouchableOpacity style={styles.synonymContainer}>
+  //           <Text style={styles.synonymText}>{item}</Text>
+  //         </TouchableOpacity>
+  //       )}
+  //     />
+  //   );
+  // };
 
   return (
     <TouchableOpacity
@@ -155,11 +60,11 @@ const PlantCard = () => {
         animationType="slide"
         onRequestClose={() => setOpenModal(!openModal)}
         onSwipeComplete={() => setOpenModal(!openModal)}
-        swipeDirection={["down"]}
+        // swipeDirection={["down"]}
         onBackdropPress={() => setOpenModal(!openModal)}
         coverScreen={true}
         children={true}
-        // backdropColor="#ECEBDF"
+        // // backdropColor="#ECEBDF"
         propagateSwipe={true}
       >
         <ScrollView contentContainerStyle={styles.modalContainer}>
@@ -172,9 +77,10 @@ const PlantCard = () => {
             </View>
             <View style={styles.cardSynonyms}>
               <Text style={styles.synonymsTitle}>Synonyms:</Text>
-              <Text style={[styles.synonymsText, { fontSize: 12 }]}>
+              {/* <Text style={[styles.synonymsText, { fontSize: 12 }]}>
                 {synonyms.join(",")} ...
-              </Text>
+              </Text> */}
+              {/* {synonymsShow()} */}
             </View>
           </View>
           <View style={styles.cardLinks}>
@@ -207,24 +113,22 @@ const PlantCard = () => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#ECEBDF",
+    backgroundColor: colors.secondaryBackground,
     borderRadius: 8,
     padding: 16,
-    marginBottom: 16,
     flexDirection: "column",
     alignItems: "center",
     elevation: 2,
-    width: "80%",
-    height: "50%",
+    width: "100%",
+    marginBottom: 16,
   },
   cardImage: {
     width: "100%",
     height: 200,
     borderRadius: 8,
-    marginRight: 16,
   },
   cardContent: {
-    flex: 1,
+    // flex: 1,
   },
   cardTitle: {
     fontSize: 18,
@@ -265,7 +169,7 @@ const styles = StyleSheet.create({
     color: "blue",
   },
   modalContainer: {
-    backgroundColor: "#ECEBDF",
+    backgroundColor: colors.secondaryBackground,
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
@@ -276,11 +180,25 @@ const styles = StyleSheet.create({
     height: "80vh",
   },
   modalContent: {
-    backgroundColor: "#ECEBDF",
     marginBottom: 16,
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
+  },
+  listContainer: {
+    alignItems: "center",
+  },
+  synonymContainer: {
+    marginHorizontal: 10,
+    backgroundColor: "#e7f0c3",
+    padding: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#c2d6a3",
+  },
+  synonymText: {
+    color: "#2e7d32",
+    fontSize: 8,
   },
 });
 
