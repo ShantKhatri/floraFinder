@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@google-cloud/vision": "^4.0.2",
+    "@react-navigation/bottom-tabs": "^6.5.11",
+    "@react-navigation/native": "^6.1.9",
     "expo": "~49.0.15",
     "expo-camera": "^13.6.0",
     "expo-image-picker": "^14.5.0",

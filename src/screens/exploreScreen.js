@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  ScrollView,
 } from "react-native";
 import colors from "../variables/colors";
 import PlantCard from "../components/plantCard";
@@ -62,8 +63,8 @@ const ExploreScreen = ({ navigation }) => {
         style={{
           // flex: 1,
           backgroundColor: colors.primaryBackground,
-          width: "45%",
-          marginHorizontal: 10,
+          width: "48%",
+          marginLeft: "2%",
           alignSelf: "center",
         }}
       >
@@ -97,7 +98,7 @@ const ExploreScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchCategory(pageNo, category);
-  }, []);
+  }, [pageNo, category]);
 
   const pageNavigation = () => {
     return (
@@ -107,6 +108,7 @@ const ExploreScreen = ({ navigation }) => {
             setPageNo(pageNo - 1);
             fetchCategory(pageNo, category);
           }}
+          disabled={pageNo === 1}
           style={{
             backgroundColor: colors.primaryButton,
             height: 40,
@@ -116,6 +118,7 @@ const ExploreScreen = ({ navigation }) => {
             alignItems: "center",
             borderRadius: 8,
             flexDirection: "row",
+            opacity: pageNo === 1 ? 0.5 : 1,
           }}
         >
           <AntDesign
@@ -152,7 +155,7 @@ const ExploreScreen = ({ navigation }) => {
     );
   };
 
-  const fetchResult = () => {
+  const showResult = () => {
     return (
       <View style={{ alignItems: "center", flex: 1 }}>
         <FlatList
@@ -167,7 +170,7 @@ const ExploreScreen = ({ navigation }) => {
     );
   };
   return (
-    <View style={{ flex: 1, backgroundColor: colors.primaryBackground }}>
+    <ScrollView style={{ flex: 1, backgroundColor: colors.primaryBackground }}>
       {/* {fetchCategory(pageNo, category)} */}
       <View style={styles.categoryContainer}>
         <FlatList
@@ -177,8 +180,8 @@ const ExploreScreen = ({ navigation }) => {
           horizontal
         />
       </View>
-      <View style={styles.exploreContainer}>{fetchResult()}</View>
-    </View>
+      <View style={styles.exploreContainer}>{showResult()}</View>
+    </ScrollView>
   );
 };
 
@@ -187,7 +190,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     // marginHorizontal: 20,
-    marginTop: 20,
+    marginVertical: 20,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    // backgroundColor: colors.secondaryBackground,
+    elevation: 2,
   },
   category: {
     // backgroundColor: "#fff",
