@@ -7,6 +7,8 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
+  FlatList,
+  Button,
 } from "react-native";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
@@ -14,77 +16,78 @@ import { FontAwesome } from "@expo/vector-icons";
 import PlantCard from "../components/plantCard";
 
 const SearchPlantScreen = () => {
-  const [hasCameraPermission, setHasCameraPermission] = useState(null);
-  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [camera, setCamera] = useState(null);
-  const [image, setImage] = useState(null);
+  // const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  // const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+  // const [camera, setCamera] = useState(null);
+  // const [image, setImage] = useState(null);
   const [textResult, setTextResult] = useState([]);
   const [textSearch, setTextSearch] = useState("");
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    (async () => {
-      const cameraStatus = await Camera.requestCameraPermissionsAsync();
-      setHasCameraPermission(cameraStatus.status === "granted");
+  // useEffect(() => {
+  //   (async () => {
+  //     const cameraStatus = await Camera.requestCameraPermissionsAsync();
+  //     setHasCameraPermission(cameraStatus.status === "granted");
 
-      const galleryStatus =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      setHasGalleryPermission(galleryStatus.status === "granted");
-    })();
-  }, []);
+  //     const galleryStatus =
+  //       await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //     setHasGalleryPermission(galleryStatus.status === "granted");
+  //   })();
+  // }, []);
 
-  const processImage = async (base64) => {
-    try {
-      let body = JSON.stringify({
-        requests: [
-          {
-            features: [{ type: "TEXT_DETECTION", maxResults: 5 }],
-            image: { content: base64 },
-          },
-        ],
-      });
+  // const processImage = async (base64) => {
+  //   try {
+  //     let body = JSON.stringify({
+  //       requests: [
+  //         {
+  //           features: [{ type: "TEXT_DETECTION", maxResults: 5 }],
+  //           image: { content: base64 },
+  //         },
+  //       ],
+  //     });
 
-      let response = await fetch(
-        "https://vision.googleapis.com/v1/images:annotate?key=YOUR_API_KEY",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: body,
-        }
-      );
+  //     let response = await fetch(
+  //       "https://vision.googleapis.com/v1/images:annotate?key=YOUR_API_KEY",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: body,
+  //       }
+  //     );
 
-      let responseJson = await response.json();
-      setTextResult(JSON.stringify(responseJson, null, 2));
-    } catch (error) {
-      console.error("Error processing image:", error);
-    }
-  };
+  //     let responseJson = await response.json();
+  //     setTextResult(JSON.stringify(responseJson, null, 2));
+  //   } catch (error) {
+  //     console.error("Error processing image:", error);
+  //   }
+  // };
 
-  const takePicture = async () => {
-    if (camera) {
-      const photo = await camera.takePictureAsync({ base64: true });
-      setImage(photo.uri);
-      processImage(photo.base64);
-    }
-  };
+  // const takePicture = async () => {
+  //   if (camera) {
+  //     const photo = await camera.takePictureAsync({ base64: true });
+  //     setImage(photo.uri);
+  //     processImage(photo.base64);
+  //   }
+  // };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      base64: true,
-    });
+  // const pickImage = async () => {
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     base64: true,
+  //   });
 
-    if (!result.cancelled) {
-      setImage(result.uri);
-      processImage(result.base64);
-    }
-  };
+  //   if (!result.cancelled) {
+  //     setImage(result.uri);
+  //     processImage(result.base64);
+  //   }
+  // };
 
   const searchPlant = async () => {
     const response = await fetch(
-      "https://trefle.io/api/v1/plants?token=6-zgTrpjdpJK-7MqVo_iXczQRpdIq_hmEIDfdhTUxlg"
+      `https://trefle.io/api/v1/plants?token=6-zgTrpjdpJK-7MqVo_iXczQRpdIq_hmEIDfdhTUxlg`
     );
     const json = await response.json();
     const data = json.data.filter(
@@ -108,16 +111,25 @@ const SearchPlantScreen = () => {
     // console.log(textResult);
   };
 
-  serachResult = () => {
-    return textResult && textResult.map((item) => PlantCard());
+  const serachResult = () => {
+    return (
+      <View style={{ alignItems: "center" }}>
+        <FlatList
+          data={textResult}
+          renderItem={({ item }) => <PlantCard key={item.id} plant={item} />}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+      // textResult.map((item) => <PlantCard key={item.id} plant={item} />)
+    );
   };
 
-  if (hasCameraPermission === null || hasGalleryPermission === null) {
-    return <View />;
-  }
-  if (hasCameraPermission === false || hasGalleryPermission === false) {
-    return <Text>No access to camera or gallery</Text>;
-  }
+  // if (hasCameraPermission === null || hasGalleryPermission === null) {
+  //   return <View />;
+  // }
+  // if (hasCameraPermission === false || hasGalleryPermission === false) {
+  //   return <Text>No access to camera or gallery</Text>;
+  // }
 
   return (
     <ScrollView style={styles.container}>
@@ -161,10 +173,10 @@ const SearchPlantScreen = () => {
         width={100}
         //   style={styles.image}
       /> */}
-      {/* {serachResult()} */}
-      {PlantCard()}
-      <View style={{ marginHorizontal: 20 }}>
-        {/* <Text>{textResult}</Text>
+      <View style={{ alignItems: "center", paddingHorizontal: 20, flex: 1 }}>
+        {serachResult()}
+        <View style={{ marginHorizontal: 20 }}>
+          {/* <Text>{textResult}</Text>
         <Image
           source={{
             uri: "https://d2seqvvyy3b8p2.cloudfront.net/40ab8e7cdddbe3e78a581b84efa4e893.jpg",
@@ -173,6 +185,7 @@ const SearchPlantScreen = () => {
           alt="plant"
           //   style={styles.image}
         /> */}
+        </View>
       </View>
       {/* ))} */}
     </ScrollView>
