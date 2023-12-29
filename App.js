@@ -14,6 +14,9 @@ import {
 } from "@expo/vector-icons";
 import colors from "./src/variables/colors";
 import { StatusBar, Text, View } from "react-native";
+import UserProfileScreen from "./src/screens/userProfile/userProfile";
+import UserProfileStack from "./src/navigation/stackNavigator/UserProfileStack";
+import BottomTab from "./src/navigation/bottomTab/BottomTab";
 // import { Settings } from "react-native";
 
 const Tab = createBottomTabNavigator();
@@ -48,69 +51,7 @@ const header = (title) => {
 const App = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarShowLabel: false,
-          tabBarActiveTintColor: "#272D0E",
-          tabBarInactiveTintColor: "gray",
-          tabBarStyle: [
-            {
-              display: "flex",
-              backgroundColor: colors.primaryBackground,
-            },
-            null,
-          ],
-        })}
-      >
-        <Tab.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Foundation name="trees" size={24} color={colors.primaryButton} />
-            ),
-            header: () => header("Plant of the Day"),
-          }}
-        />
-        <Tab.Screen
-          name="Explore"
-          component={ExploreScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons
-                name="flower-tulip"
-                size={24}
-                color={colors.primaryButton}
-              />
-            ),
-            header: () => header("Explore"),
-          }}
-        />
-        <Tab.Screen
-          name="Search"
-          component={SearchPlantScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <FontAwesome
-                name="wpexplorer"
-                size={24}
-                color={colors.primaryButton}
-              />
-            ),
-            header: () => null,
-          }}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Entypo name="leaf" size={24} color={colors.primaryButton} />
-            ),
-            header: () => header("Settings"),
-          }}
-        />
-      </Tab.Navigator>
+      <BottomTab />
     </NavigationContainer>
   );
 };
