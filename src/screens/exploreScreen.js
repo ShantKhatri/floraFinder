@@ -12,6 +12,7 @@ import colors from "../variables/colors";
 import PlantCard from "../components/plantCard";
 import fetch from "node-fetch";
 import { AntDesign } from "@expo/vector-icons";
+import fetchCategory from "../services/fetchCategory";
 
 const ExploreScreen = ({ navigation }) => {
   const [textResult, setTextResult] = useState([]);
@@ -73,31 +74,9 @@ const ExploreScreen = ({ navigation }) => {
     );
   };
 
-  const fetchCategory = async (page, category) => {
-    try {
-      const response = await fetch(
-        `https://trefle.io/api/v1/${category}?token=6-zgTrpjdpJK-7MqVo_iXczQRpdIq_hmEIDfdhTUxlg&page=${page}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`Error fetching data: ${response.statusText}`);
-      }
-
-      const json = await response.json();
-      const newData = json.data;
-
-      // Assuming textResult is a state variable
-      setTextResult(newData);
-
-      // Log the current state of textResult
-      // console.log(textResult);
-    } catch (error) {
-      console.error("Error:", error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategory(pageNo, category);
+  useEffect(async () => {
+    const data = await fetchCategory(pageNo, category);
+    setTextResult(data);
   }, [pageNo, category]);
 
   const pageNavigation = () => {
