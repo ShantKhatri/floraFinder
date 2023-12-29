@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
+  ScrollView,
+  SafeAreaView,
 } from "react-native";
 import SearchPlantScreen from "./searchPlant";
 import PlantOfTheDayCard from "../components/plantOfTheDayCard";
@@ -15,6 +17,8 @@ import colors from "../variables/colors";
 const HomeScreen = () => {
   const [plantsOfTheDay, setPlantsOfTheDay] = useState([]);
   const [selectedPlant, setSelectedPlant] = useState(1);
+  const [loadingComplete, setLoadingComplete] = useState(false);
+
   // console.log("DATA");
 
   const fetchPlantsOfTheDay = async () => {
@@ -30,6 +34,16 @@ const HomeScreen = () => {
   useEffect(() => {
     console.log("USE EFFECT");
     fetchPlantsOfTheDay();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      setLoadingComplete(true);
+    };
+
+    fetchData();
   }, []);
 
   // const image1 = plantsOfTheDay[1].image_url;
@@ -49,7 +63,9 @@ const HomeScreen = () => {
       >
         <ImageBackground
           source={{
-            uri: "https://storage.googleapis.com/powop-assets/neotropikey/tapura_peruviana_1_fullsize.jpg",
+            uri: plantsOfTheDay[index].image_url
+              ? plantsOfTheDay[index].image_url
+              : "https://storage.googleapis.com/powop-assets/neotropikey/tapura_peruviana_1_fullsize.jpg",
           }}
           style={{
             width: 100,
@@ -64,18 +80,20 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center" }}>
+    <SafeAreaView style={{ alignItems: "center", flex: 1 }}>
       <View style={{ alignItems: "center", width: "100%" }}>
-        <PlantOfTheDayCard
-          plant={plantsOfTheDay[selectedPlant]}
-          key={(item) => item.id}
-        />
+        {loadingComplete && (
+          <PlantOfTheDayCard
+            plant={plantsOfTheDay[selectedPlant]}
+            key={(item) => item.id + item.scientific_name}
+          />
+        )}
       </View>
       <View style={styles.outerCircle}>
         {plantsOfTheDay.length > 0 &&
           plantsOfTheDay.map((item, index) => CircleWithSections(item, index))}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -92,7 +110,7 @@ const styles = StyleSheet.create({
   },
   innerCircle: {
     width: 100,
-    height: 100,
+    // height: 100,
     borderRadius: 100,
     // backgroundColor: "blue",
     // position: "absolute",

@@ -25,10 +25,12 @@ const SearchPlantScreen = () => {
   const [textSearch, setTextSearch] = useState("");
   // const [page, setPage] = useState(1);
 
-  useEffect(async () => {
+  const searchPlant = async () => {
+    console.log("searching for plant");
     const fetchPlants = await fetchPlant(textSearch);
+    console.log(fetchPlants);
     setTextResult(fetchPlants);
-  }, [textSearch]);
+  };
 
   // useEffect(() => {
   //   (async () => {
@@ -142,7 +144,7 @@ const SearchPlantScreen = () => {
             setTextSearch(plant.toLowerCase());
           }}
         />
-        <TouchableOpacity onPress={fetchPlant} style={styles.searchButton}>
+        <TouchableOpacity onPress={searchPlant} style={styles.searchButton}>
           <FontAwesome name="search" size={24} color="black" />
         </TouchableOpacity>
       </View>
