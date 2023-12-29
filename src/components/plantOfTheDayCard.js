@@ -33,6 +33,20 @@ const PlantOfTheDayCard = ({ plant }) => {
   } = plant;
   console.log("MAIN SPECIES", main_species);
 
+  const mainSpeciesData = [
+    { key: "Slug", value: main_species.slug },
+    { key: "Scientific Name", value: main_species.scientific_name },
+    { key: "Year", value: main_species.year },
+    { key: "Bibliography", value: main_species.bibliography },
+    { key: "Author", value: main_species.author },
+    { key: "Rank", value: main_species.rank },
+    { key: "Observations", value: main_species.observations },
+    { key: "Vegetable", value: main_species.vegetable },
+    { key: "Genus", value: main_species.genus },
+    { key: "Family", value: main_species.family },
+    { key: "Edible", value: main_species.edible },
+  ];
+
   const handleLinkPress = (url) => {
     Linking.openURL(url);
   };
@@ -66,6 +80,7 @@ const PlantOfTheDayCard = ({ plant }) => {
   return (
     <ScrollView
       style={styles.card}
+      contentContainerStyle={{ paddingBottom: 16 }}
       //   onPress={() => setOpenModal(!openModal)}
     >
       <View style={styles.titleContainer}>
@@ -76,9 +91,11 @@ const PlantOfTheDayCard = ({ plant }) => {
         <Text style={styles.cardScientificName}>{scientific_name}</Text>
         <FlowerIcon />
       </View>
-      {/* <View style={styles.imageContainer}>
-        <Image source={{ uri: image_url }} style={styles.cardImage} />
-      </View> */}
+      {image_url && (
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: image_url }} style={styles.cardImage} />
+        </View>
+      )}
       {/* <View style={styles.cardContent}>
         <View style={styles.cardSynonyms}>
           <Text style={styles.synonymsTitle}>Synonyms:</Text>
@@ -91,16 +108,18 @@ const PlantOfTheDayCard = ({ plant }) => {
         <Text style={styles.slugTitle}>Slug:</Text>
         <Text style={styles.slug}>{slug}</Text>
       </View>
-      <View
-        style={{
-          ...styles.slugContainer,
-          flexDirection: "column",
-          height: "auto",
-        }}
-      >
-        <Text style={styles.slugTitle}>Observations:</Text>
-        <Text style={styles.slug}>{observations}</Text>
-      </View>
+      {observations && (
+        <View
+          style={{
+            ...styles.slugContainer,
+            flexDirection: "column",
+            height: "auto",
+          }}
+        >
+          <Text style={styles.slugTitle}>Observations:</Text>
+          <Text style={styles.slug}>{observations}</Text>
+        </View>
+      )}
 
       <View
         style={{
@@ -110,75 +129,21 @@ const PlantOfTheDayCard = ({ plant }) => {
           paddingVertical: 8,
         }}
       >
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>Slug:</Text>
-          <Text style={styles.speciesValueText}>{main_species.slug}</Text>
-        </View>
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>Scientific Name:</Text>
-          <Text style={styles.speciesValueText}>
-            {main_species.scientific_name}
-          </Text>
-        </View>
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>Year:</Text>
-          <Text style={styles.speciesValueText}>{main_species.year}</Text>
-        </View>
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>Bibliography:</Text>
-          <Text style={styles.speciesValueText}>
-            {main_species.bibliography}
-          </Text>
-        </View>
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>author:</Text>
-          <Text style={styles.speciesValueText}>{main_species.author}</Text>
-        </View>
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>rank:</Text>
-          <Text style={styles.speciesValueText}>{main_species.rank}</Text>
-        </View>
-        <View
-          style={{
-            ...styles.speciesDetailsContainer,
-            flexDirection: "column",
-            height: "auto",
-          }}
-        >
-          <Text style={styles.speciesDetailKey}>Observations:</Text>
-          <Text style={styles.speciesValueText}>
-            {main_species.observations}
-          </Text>
-        </View>
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>vegetable:</Text>
-          <Text style={styles.speciesValueText}>
-            {" "}
-            {main_species.vegetable === true
-              ? "true"
-              : main_species.vegetable === false
-              ? "false"
-              : "null"}
-          </Text>
-        </View>
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>genus:</Text>
-          <Text style={styles.speciesValueText}>{main_species.genus}</Text>
-        </View>
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>family:</Text>
-          <Text style={styles.speciesValueText}>{main_species.family}</Text>
-        </View>
-        <View style={styles.speciesDetailsContainer}>
-          <Text style={styles.speciesDetailKey}>edible:</Text>
-          <Text style={styles.speciesValueText}>
-            {main_species.edible === true
-              ? "true"
-              : main_species.edible === false
-              ? "false"
-              : "null"}
-          </Text>
-        </View>
+        <FlatList
+          data={mainSpeciesData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                ...styles.speciesDetailsContainer,
+                // flexDirection: item.value.lenght > 25 ? "column" : "row",
+              }}
+            >
+              <Text style={styles.speciesDetailKey}>{item.key}:</Text>
+              <Text style={styles.speciesValueText}>{item.value}</Text>
+            </View>
+          )}
+        />
       </View>
 
       <View style={styles.cardLinks}>
@@ -215,11 +180,11 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     elevation: 2,
     width: "100%",
-    marginBottom: 16,
   },
   titleContainer: {
     width: "100%",
-    height: 40,
+    // height: 40,
+    paddingVertical: 8,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 8,
@@ -229,7 +194,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: "60%",
+    height: "40%",
     borderRadius: 8,
     marginBottom: 8,
   },
@@ -277,7 +242,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     padding: 8,
     backgroundColor: colors.primaryButton,
-    width: "100%",
     borderRadius: 16,
   },
   slugTitle: {
