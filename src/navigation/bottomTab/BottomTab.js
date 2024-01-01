@@ -15,6 +15,7 @@ import ExploreScreen from "../../screens/exploreScreen";
 import SearchPlantScreen from "../../screens/searchPlant";
 import colors from "../../variables/colors";
 import { Ionicons } from "@expo/vector-icons";
+import SearchPlantStack from "../stackNavigator/SearchPlantStack";
 // import { Settings } from "react-native";
 
 const Tab = createBottomTabNavigator();
@@ -87,7 +88,7 @@ const BottomTab = (navigation) => {
       />
       <Tab.Screen
         name="Search"
-        component={SearchPlantScreen}
+        component={SearchPlantStack}
         options={{
           tabBarIcon: ({ color, size }) => (
             <FontAwesome
