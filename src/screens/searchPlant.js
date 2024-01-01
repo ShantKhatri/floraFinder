@@ -10,20 +10,15 @@ import {
   FlatList,
   Button,
 } from "react-native";
-import { Camera } from "expo-camera";
-import * as ImagePicker from "expo-image-picker";
 import { FontAwesome } from "@expo/vector-icons";
 import PlantCard from "../components/plantCard";
 import fetchPlant from "../services/fetchPlant";
+import PlantScanner from "../components/plantScanner";
 
 const SearchPlantScreen = () => {
-  // const [hasCameraPermission, setHasCameraPermission] = useState(null);
-  // const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  // const [camera, setCamera] = useState(null);
-  // const [image, setImage] = useState(null);
   const [textResult, setTextResult] = useState([]);
   const [textSearch, setTextSearch] = useState("");
-  // const [page, setPage] = useState(1);
+  const [showCamera, setShowCamera] = useState(true);
 
   const searchPlant = async () => {
     console.log("searching for plant");
@@ -31,68 +26,6 @@ const SearchPlantScreen = () => {
     console.log(fetchPlants);
     setTextResult(fetchPlants);
   };
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const cameraStatus = await Camera.requestCameraPermissionsAsync();
-  //     setHasCameraPermission(cameraStatus.status === "granted");
-
-  //     const galleryStatus =
-  //       await ImagePicker.requestMediaLibraryPermissionsAsync();
-  //     setHasGalleryPermission(galleryStatus.status === "granted");
-  //   })();
-  // }, []);
-
-  // const processImage = async (base64) => {
-  //   try {
-  //     let body = JSON.stringify({
-  //       requests: [
-  //         {
-  //           features: [{ type: "TEXT_DETECTION", maxResults: 5 }],
-  //           image: { content: base64 },
-  //         },
-  //       ],
-  //     });
-
-  //     let response = await fetch(
-  //       "https://vision.googleapis.com/v1/images:annotate?key=YOUR_API_KEY",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           Accept: "application/json",
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: body,
-  //       }
-  //     );
-
-  //     let responseJson = await response.json();
-  //     setTextResult(JSON.stringify(responseJson, null, 2));
-  //   } catch (error) {
-  //     console.error("Error processing image:", error);
-  //   }
-  // };
-
-  // const takePicture = async () => {
-  //   if (camera) {
-  //     const photo = await camera.takePictureAsync({ base64: true });
-  //     setImage(photo.uri);
-  //     processImage(photo.base64);
-  //   }
-  // };
-
-  // const pickImage = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     base64: true,
-  //   });
-
-  //   if (!result.cancelled) {
-  //     setImage(result.uri);
-  //     processImage(result.base64);
-  //   }
-  // };
-
   const serachResult = () => {
     return (
       <View style={{ alignItems: "center" }}>
@@ -102,38 +35,11 @@ const SearchPlantScreen = () => {
           keyExtractor={(item) => item.id}
         />
       </View>
-      // textResult.map((item) => <PlantCard key={item.id} plant={item} />)
     );
   };
 
-  // if (hasCameraPermission === null || hasGalleryPermission === null) {
-  //   return <View />;
-  // }
-  // if (hasCameraPermission === false || hasGalleryPermission === false) {
-  //   return <Text>No access to camera or gallery</Text>;
-  // }
-
   return (
     <ScrollView style={styles.container}>
-      {/* <>
-        <Camera
-          ref={(ref) => setCamera(ref)}
-          style={styles.camera}
-          type={Camera.Constants.Type.back}
-        />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={takePicture} style={styles.button}>
-            <Text style={styles.buttonText}>Take Photo</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={pickImage} style={styles.button}>
-            <Text style={styles.buttonText}>Pick Image</Text>
-          </TouchableOpacity>
-        </View>
-        {image && <Image source={{ uri: image }} style={styles.image} />}
-        {textResult !== "" && (
-          <Text style={styles.textResult}>{textResult}</Text>
-        )}
-      </> */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -148,28 +54,19 @@ const SearchPlantScreen = () => {
           <FontAwesome name="search" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      {/* <Image
-        source={{ uri: textResult[0].image_url }}
-        onError={(error) => console.log("Image loading error:", error)}
-        alt="plant"
-        width={100}
-        //   style={styles.image}
-      /> */}
       <View style={{ alignItems: "center", paddingHorizontal: 20, flex: 1 }}>
         {serachResult()}
-        <View style={{ marginHorizontal: 20 }}>
-          {/* <Text>{textResult}</Text>
-        <Image
-          source={{
-            uri: "https://d2seqvvyy3b8p2.cloudfront.net/40ab8e7cdddbe3e78a581b84efa4e893.jpg",
-          }}
-          //   source={undefined}
-          alt="plant"
-          //   style={styles.image}
-        /> */}
-        </View>
+        <View style={{ marginHorizontal: 20 }}></View>
       </View>
-      {/* ))} */}
+      <View style={{ flex: 1 }}>
+        <PlantScanner
+          showCamera={showCamera}
+          setScanResult={(result) => {
+            setTextResult(result);
+          }}
+        />
+      </View>
+      <Button title="camera" onPress={() => setShowCamera(!showCamera)} />
     </ScrollView>
   );
 };

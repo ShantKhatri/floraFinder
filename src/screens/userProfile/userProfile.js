@@ -11,10 +11,12 @@ import {
 import colors from "../../variables/colors";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 import CameraImagePicker from "../../components/cameraImagePicker";
 
 const UserProfileScreen = ({ navigation }) => {
   const [image, setImage] = useState("https://via.placeholder.com/150");
+
   const userProfileOptions = [
     { id: 1, name: "Favorite Plants", screen: "FavoritePlants" },
     { id: 2, name: "User Details", screen: "UserDetails" },
@@ -37,6 +39,7 @@ const UserProfileScreen = ({ navigation }) => {
       setImage(result.assets[0].uri);
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={{}}>
