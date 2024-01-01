@@ -19,8 +19,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "googleServicesFile": "./google-services.json"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,10 +30,6 @@
         {
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photo",
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
-        },
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
         }
       ]
     ]

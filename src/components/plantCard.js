@@ -8,13 +8,16 @@ import {
   Button,
   ScrollView,
   FlatList,
+  ImageBackground,
 } from "react-native";
 import Modal, { ReactNativeModal } from "react-native-modal";
 import colors from "../variables/colors";
+import FavouriteButton from "./favourite";
 const PlantCard = ({ plant }) => {
   const [openModal, setOpenModal] = useState(false);
 
-  const { common_name, scientific_name, image_url, synonyms, links } = plant;
+  const { common_name, scientific_name, image_url, synonyms, links, id } =
+    plant;
 
   const handleLinkPress = (url) => {
     Linking.openURL(url);
@@ -43,7 +46,19 @@ const PlantCard = ({ plant }) => {
       style={styles.card}
       onPress={() => setOpenModal(!openModal)}
     >
-      <Image source={{ uri: image_url }} style={styles.cardImage} />
+      <ImageBackground source={{ uri: image_url }} style={styles.cardImage}>
+        <View
+          style={{
+            position: "absolute",
+            zIndex: 1,
+            alignSelf: "flex-end",
+            // marginRight: "10%",
+            // marginTop: "5%",
+          }}
+        >
+          <FavouriteButton plant={plant} key={plant.id} />
+        </View>
+      </ImageBackground>
       <View style={styles.cardContent}>
         <Text style={styles.cardTitle}>{common_name}</Text>
         <Text style={styles.synonymsTitle}>Scientific Name:</Text>
@@ -118,7 +133,7 @@ const styles = StyleSheet.create({
     padding: 16,
     flexDirection: "column",
     alignItems: "center",
-    elevation: 2,
+    elevation: 5,
     width: "100%",
     marginBottom: 16,
   },
