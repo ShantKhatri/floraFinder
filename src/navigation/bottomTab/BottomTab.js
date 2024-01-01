@@ -8,36 +8,39 @@ import {
   FontAwesome,
   Entypo,
 } from "@expo/vector-icons";
-import { StatusBar, Text, View } from "react-native";
+import { StatusBar, Text, TouchableOpacity, View } from "react-native";
 import UserProfileStack from "../stackNavigator/UserProfileStack";
 import HomeScreen from "../../screens/homeScreen";
 import ExploreScreen from "../../screens/exploreScreen";
 import SearchPlantScreen from "../../screens/searchPlant";
 import colors from "../../variables/colors";
+import { Ionicons } from "@expo/vector-icons";
 // import { Settings } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
-const header = (title) => {
-  return (
-    <View
-      style={{
-        // height: "10%",
-        backgroundColor: colors.secondaryBackground,
-        justifyContent: "center",
-        alignItems: "center",
-        paddingTop: StatusBar.currentHeight,
-        elevation: 5,
-      }}
-    >
-      <Text style={{ fontSize: 32, fontWeight: "bold", color: "#133B31" }}>
-        {title}
-      </Text>
-    </View>
-  );
-};
-
-const BottomTab = () => {
+const BottomTab = (navigation) => {
+  const header = (title) => {
+    return (
+      <View
+        style={{
+          // height: "10%",
+          backgroundColor: colors.secondaryBackground,
+          justifyContent: "center",
+          alignItems: "center",
+          paddingTop: StatusBar.currentHeight,
+          elevation: 5,
+        }}
+      >
+        {/* <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back-sharp" size={24} color="black" />
+        </TouchableOpacity> */}
+        <Text style={{ fontSize: 32, fontWeight: "bold", color: "#133B31" }}>
+          {title}
+        </Text>
+      </View>
+    );
+  };
   return (
     <Tab.Navigator
       initialRouteName="Search"
