@@ -8,17 +8,21 @@ import {
   TextInput,
   ScrollView,
   FlatList,
-  Button,
+  SafeAreaView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import PlantCard from "../components/plantCard";
 import fetchPlant from "../services/fetchPlant";
-import PlantScanner from "../components/plantScanner";
 
-const SearchPlantScreen = () => {
-  const [textResult, setTextResult] = useState([]);
+const SearchPlantScreen = ({ navigation, route }) => {
+  const { plant } = route?.params ? route.params : [];
+  const [textResult, setTextResult] = useState(plant || []);
   const [textSearch, setTextSearch] = useState("");
   const [showCamera, setShowCamera] = useState(true);
+
+  useEffect(() => {
+    setTextResult(plant);
+  }, [plant]);
 
   const searchPlant = async () => {
     console.log("searching for plant");
@@ -39,41 +43,65 @@ const SearchPlantScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          selectionColor={"green"}
-          placeholder="Search for a plant"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(plant) => {
-            setTextSearch(plant.toLowerCase());
-          }}
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            selectionColor={"green"}
+            placeholder="Search for a plant"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(plant) => {
+              setTextSearch(plant.toLowerCase());
+            }}
+          />
+          <TouchableOpacity onPress={searchPlant} style={styles.searchButton}>
+            <FontAwesome name="search" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View style={{ alignItems: "center", paddingHorizontal: 20, flex: 1 }}>
+          {serachResult()}
+        </View>
+
+        {textResult && (
+          <View
+            style={{
+              alignItems: "center",
+              marginTop: 20,
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 20 }}>No results found</Text>
+          </View>
+        )}
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.scanButton}
+        onPress={() => navigation.navigate("PlantScanner")}
+      >
+        <Image
+          source={require("../../assets/lens.png")}
+          width={40}
+          height={40}
+          style={{ borderRadius: 20 }}
         />
-        <TouchableOpacity onPress={searchPlant} style={styles.searchButton}>
-          <FontAwesome name="search" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-      <View style={{ alignItems: "center", paddingHorizontal: 20, flex: 1 }}>
-        {serachResult()}
-        <View style={{ marginHorizontal: 20 }}></View>
-      </View>
-      <View style={{ flex: 1 }}>
-        <PlantScanner
-          showCamera={showCamera}
-          setScanResult={(result) => {
-            setTextResult(result);
-          }}
-        />
-      </View>
-      <Button title="camera" onPress={() => setShowCamera(!showCamera)} />
-    </ScrollView>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#ECEDE1", width: "100%" },
-  camera: { flex: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: "#ECEDE1",
+    width: "100%",
+  },
   buttonContainer: {
     flex: 0.1,
     flexDirection: "row",
@@ -109,6 +137,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 48,
     height: 48,
+  },
+  scanButton: {
+    flex: 1,
+    position: "absolute",
+    bottom: 10,
+    right: "5%",
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    backgroundColor: "#5F7A5D",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "flex-end",
   },
 });
 

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { TouchableOpacity, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FavouritesContext } from "../contexts/FavouritesContext";
+import colors from "../variables/colors";
 
 const FavouriteButton = ({ plant }) => {
   //   console.log("PLANT", plant.id);
@@ -28,7 +29,7 @@ const FavouriteButton = ({ plant }) => {
       <AntDesign
         name={isFavourite ? "heart" : "hearto"}
         size={24}
-        color={isFavourite ? "red" : "black"}
+        color={isFavourite ? "#AF1D3D" : "black"}
       />
     </TouchableOpacity>
   );
