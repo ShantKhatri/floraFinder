@@ -1,53 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
   Image,
-  Button,
   StyleSheet,
   FlatList,
   TouchableOpacity,
 } from "react-native";
 import colors from "../../variables/colors";
 import { AntDesign } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
-import CameraImagePicker from "../../components/cameraImagePicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimation";
 
 const UserProfileScreen = ({ navigation }) => {
-  const [image, setImage] = useState("https://via.placeholder.com/150");
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const userProfileOptions = [
     { id: 1, name: "Favorite Plants", screen: "FavoritePlants" },
     { id: 2, name: "User Details", screen: "UserDetails" },
-    { id: 3, name: "Reset Password", screen: "ResetPassword" },
-    { id: 4, name: "Logout", screen: "Logout" },
+    // { id: 3, name: "Reset Password", screen: "ResetPassword" },
+    // { id: 4, name: "Logout", screen: "Logout" },
   ];
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
+  const getProfilePicture = async () => {
+    setLoading(true);
+    const jsonValue = await AsyncStorage.getItem("profilePicture");
+    const photoUri = jsonValue != null ? JSON.parse(jsonValue) : null;
+    console.log("photoUri", typeof photoUri);
+    setImage(photoUri);
+    setLoading(false);
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      getProfilePicture();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
       <View style={{}}>
-        <TouchableOpacity onPress={pickImage}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("CameraImagePicker")}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            width: 150,
+            height: 150,
+            borderRadius: 75,
+            backgroundColor: colors.secondaryBackground,
+          }}
+        >
+          {console.log("image", image)}
           <Image
-            source={{ uri: image }} // Replace with user's image
+            source={{
+              uri: image,
+            }} // Replace with user's image
             style={styles.profileImage}
           />
+          {loading && <ActivityIndicatorAnimation loading={loading} />}
         </TouchableOpacity>
         <Text style={styles.userName}>User's Name</Text>
       </View>
