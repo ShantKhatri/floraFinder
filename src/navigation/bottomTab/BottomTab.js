@@ -8,7 +8,14 @@ import {
   FontAwesome,
   Entypo,
 } from "@expo/vector-icons";
-import { StatusBar, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  StatusBar,
+} from "react-native";
 import UserProfileStack from "../stackNavigator/UserProfileStack";
 import HomeScreen from "../../screens/homeScreen";
 import ExploreScreen from "../../screens/exploreScreen";
@@ -16,29 +23,48 @@ import SearchPlantScreen from "../../screens/searchPlant";
 import colors from "../../variables/colors";
 import { Ionicons } from "@expo/vector-icons";
 import SearchPlantStack from "../stackNavigator/SearchPlantStack";
+import { useNavigation } from "@react-navigation/native";
 // import { Settings } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
-const BottomTab = (navigation) => {
+const BottomTab = () => {
+  const navigation = useNavigation();
+
   const header = (title) => {
     return (
       <View
         style={{
           // height: "10%",
           backgroundColor: colors.secondaryBackground,
-          justifyContent: "center",
+          flexDirection: "row",
+          justifyContent: "space-between",
           alignItems: "center",
-          paddingTop: StatusBar.currentHeight,
+          // paddingTop: StatusBar.currentHeight,
           elevation: 5,
+          paddingHorizontal: 16,
         }}
       >
-        {/* <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-sharp" size={24} color="black" />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <Text style={{ fontSize: 32, fontWeight: "bold", color: "#133B31" }}>
           {title}
         </Text>
+        <TouchableOpacity
+          style={styles.scanButton}
+          onPress={() =>
+            navigation.navigate("Search", { screen: "PlantScanner" })
+          }
+        >
+          <Image
+            source={require("../../../assets/lens.png")}
+            // width={50}
+            // height={50}
+            style={{ borderRadius: 10 }}
+          />
+        </TouchableOpacity>
+        <StatusBar backgroundColor={colors.secondaryBackground} />
       </View>
     );
   };
@@ -113,5 +139,19 @@ const BottomTab = (navigation) => {
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  scanButton: {
+    // position: "absolute",
+    // width: 50,
+    // height: 50,
+    // top: 15,
+    // right: 0,
+    // margin: 16,
+    backgroundColor: colors.primaryButton,
+    borderRadius: 20,
+    padding: 4,
+  },
+});
 
 export default BottomTab;
