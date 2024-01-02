@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "floraFinder",
-    "slug": "floraFinder",
+    "slug": "florafinder",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["android.permission.RECORD_AUDIO"],
+      "package": "com.prashantkhatri.florafinder"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,6 +34,12 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "180599dc-1772-4d44-94a7-1e9131176e73"
+      }
+    },
+    "owner": "prashantkhatri"
   }
 }
