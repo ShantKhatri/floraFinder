@@ -13,11 +13,13 @@ import SearchPlantScreen from "./searchPlant";
 import PlantOfTheDayCard from "../components/plantOfTheDayCard";
 import plantsOfTheDayData from "../services/plantsOfTheDay";
 import colors from "../variables/colors";
+import ActivityIndicatorAnimation from "../components/activityIndicatorAnimation";
 
 const HomeScreen = () => {
   const [plantsOfTheDay, setPlantsOfTheDay] = useState([]);
   const [selectedPlant, setSelectedPlant] = useState(1);
   const [loadingComplete, setLoadingComplete] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // console.log("DATA");
 
@@ -26,21 +28,25 @@ const HomeScreen = () => {
       const data = await plantsOfTheDayData;
       console.log("DATA", data);
       setPlantsOfTheDay(data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching plants of the day:", error);
     }
   };
 
   useEffect(() => {
+    setLoading(true);
     console.log("USE EFFECT");
     fetchPlantsOfTheDay();
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       setLoadingComplete(true);
+      setLoading(false);
     };
 
     fetchData();
@@ -89,6 +95,9 @@ const HomeScreen = () => {
           />
         )}
       </View>
+      {(loading || !loadingComplete) && (
+        <ActivityIndicatorAnimation loadingStatus={loading} />
+      )}
       <View style={styles.outerCircle}>
         {plantsOfTheDay.length > 0 &&
           plantsOfTheDay.map((item, index) => CircleWithSections(item, index))}

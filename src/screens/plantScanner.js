@@ -1,12 +1,19 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Camera, CameraType } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Slider from "@react-native-community/slider";
-import { set } from "date-fns";
-import LabelSearch from "../services/plantScanAnalyze/labelSearch";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
+import LabelSearch from "../services/plantScanAnalyze/labelSearch";
+import colors from "../variables/colors";
+import ActivityIndicatorAnimation from "../components/activityIndicatorAnimation";
 
 const PlantScanner = ({ navigation }) => {
   const [type, setType] = useState(CameraType.back);
@@ -17,7 +24,7 @@ const PlantScanner = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [cameraOpened, setCameraOpened] = useState(true);
   const [zoom, setZoom] = useState(0);
-  const [imageSource, setImageSource] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -44,119 +51,111 @@ const PlantScanner = ({ navigation }) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setImage(result.assets[0].uri);
-      const image = result.assets[0].uri;
-
+      setLoading(true);
+      setCameraOpened(false);
       try {
-        console.log(
-          "searching for plant from getResult before LabelSearch",
-          image
-        );
-        const result = await LabelSearch(image);
-        console.log("searching for plant from getResult after LabelSearch");
-        setResult(result);
-        navigation.navigate("SearchResult", { plant: result });
+        const results = await LabelSearch(result.assets[0].uri);
+        setResult(results);
+        navigation.navigate("SearchResult", { plant: results });
       } catch (error) {
+        setLoading(false);
         console.error("Error getting Result:", error);
       }
-      //   return result;
     }
   };
-
-  if (!cameraOpened) {
-    return (
-      <View style={styles.container}>
-        {/* Display the selected image or provide an option to reopen the camera */}
-      </View>
-    );
-  }
 
   const takePicture = async () => {
     if (camera) {
       const photo = await camera.takePictureAsync({ base64: true });
-      //   return photo;
       setImage(photo.uri);
+      setLoading(true);
+      setCameraOpened(false);
       try {
-        console.log(
-          "searching for plant from getResult before LabelSearch",
-          image
-        );
         const result = await LabelSearch(photo.uri);
-        console.log("searching for plant from getResult after LabelSearch");
         setResult(result);
         navigation.navigate("SearchResult", { plant: result });
       } catch (error) {
+        setLoading(false);
         console.error("Error getting Result:", error);
       }
-
-      // console.log(JSON.stringify(photo.uri, null, 2));
-    }
-  };
-
-  const getResult = async () => {
-    console.log("searching for plant from getResult");
-    try {
-      console.log(
-        "searching for plant from getResult before LabelSearch",
-        image
-      );
-      const result = await LabelSearch(image);
-      console.log("searching for plant from getResult after LabelSearch");
-      setResult(result);
-    } catch (error) {
-      console.error("Error getting Result:", error);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Camera
-        style={styles.camera}
-        type={type}
-        flashMode={Camera.Constants.FlashMode.auto}
-        zoom={zoom}
-        ref={(ref) => {
-          setCamera(ref);
-        }}
-      >
-        <Slider
-          style={styles.zoomSlider}
-          value={zoom}
-          onValueChange={setZoom}
-          minimumValue={0}
-          maximumValue={1}
-          minimumTrackTintColor="#FFFFFF"
-          maximumTrackTintColor="#000000"
-        />
-
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={() => navigation.goBack()}
+      {cameraOpened && (
+        <Camera
+          style={styles.camera}
+          type={type}
+          flashMode={Camera.Constants.FlashMode.auto}
+          zoom={zoom}
+          ref={(ref) => setCamera(ref)}
         >
-          <Ionicons name="close" size={24} color="black" />
-        </TouchableOpacity>
-        <View style={styles.buttonContainer}>
-          {/* <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity> */}
+          <Slider
+            style={styles.zoomSlider}
+            value={zoom}
+            onValueChange={setZoom}
+            minimumValue={0}
+            maximumValue={1}
+            minimumTrackTintColor="#FFFFFF"
+            maximumTrackTintColor="#000000"
+          />
 
-          <View style={styles.button} />
-          <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
-            <View
-              style={{
-                height: 80,
-                width: 80,
-                borderRadius: 100,
-                backgroundColor: "white",
-              }}
-            />
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="close" size={24} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={pickImage}>
-            <Ionicons name="md-images" size={42} color="white" />
-          </TouchableOpacity>
-        </View>
-      </Camera>
+          <View style={styles.buttonContainer}>
+            <View style={styles.button} />
+            <TouchableOpacity
+              style={styles.captureButton}
+              onPress={takePicture}
+            >
+              <View
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 100,
+                  backgroundColor: "white",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 100,
+                    backgroundColor: "black",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      width: 60,
+                      height: 60,
+                      borderRadius: 100,
+                      backgroundColor: "white",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  ></View>
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={pickImage}>
+              <Ionicons name="md-images" size={42} color="white" />
+            </TouchableOpacity>
+          </View>
+        </Camera>
+      )}
+      {loading && <ActivityIndicatorAnimation loadingStatus={loading} />}
+      {/* <StatusBar style="auto" /> */}
     </View>
   );
 };
@@ -164,19 +163,16 @@ const PlantScanner = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "black",
     height: "100%",
     width: "100%",
   },
   camera: {
     flex: 1,
-    // backgroundColor: "black",
     alignItems: "center",
     width: "100%",
     height: "100%",
   },
   buttonContainer: {
-    // flex: 1,
     position: "absolute",
     bottom: 0,
     backgroundColor: "transparent",
@@ -185,7 +181,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   button: {
-    // alignSelf: "flex-end",
     alignItems: "flex-end",
     backgroundColor: "transparent",
     marginBottom: 10,
@@ -197,10 +192,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 10,
     height: 100,
-    width: 100,
     borderRadius: 100,
-    borderWidth: 5,
-    borderColor: "white",
+    // borderWidth: 5,
+    // borderColor: "white",
     width: "33%",
   },
   closeButton: {
@@ -214,14 +208,9 @@ const styles = StyleSheet.create({
     top: 40,
     right: 20,
   },
-  text: {
-    fontSize: 18,
-    color: "white",
-  },
   zoomSlider: {
     width: 150,
     height: 40,
-    // marginTop: 20,
     marginBottom: 20,
     borderRadius: 10,
     backgroundColor: "white",

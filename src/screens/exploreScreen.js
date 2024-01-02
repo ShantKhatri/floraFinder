@@ -13,11 +13,14 @@ import PlantCard from "../components/plantCard";
 import fetch from "node-fetch";
 import { AntDesign } from "@expo/vector-icons";
 import fetchCategory from "../services/fetchCategory";
+import { set } from "date-fns";
+import ActivityIndicatorAnimation from "../components/activityIndicatorAnimation";
 
 const ExploreScreen = ({ navigation }) => {
   const [textResult, setTextResult] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const [category, setCategory] = useState("plants");
+  const [loading, setLoading] = useState(false);
   // Define an array of species or classifications
   const species = [
     { id: 1, name: "plants" },
@@ -74,9 +77,17 @@ const ExploreScreen = ({ navigation }) => {
     );
   };
 
-  useEffect(async () => {
-    const data = await fetchCategory(pageNo, category);
-    setTextResult(data);
+  useEffect(() => {
+    const fetchCall = async () => {
+      setLoading(true);
+      console.log("fetching category");
+      const data = await fetchCategory(pageNo, category);
+      console.log("category fetched");
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setTextResult(data);
+      setLoading(false);
+    };
+    fetchCall();
   }, [pageNo, category]);
 
   const pageNavigation = () => {
@@ -85,7 +96,6 @@ const ExploreScreen = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => {
             setPageNo(pageNo - 1);
-            fetchCategory(pageNo, category);
           }}
           disabled={pageNo === 1}
           style={{
@@ -110,7 +120,6 @@ const ExploreScreen = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => {
             setPageNo(pageNo + 1);
-            fetchCategory(pageNo, category);
           }}
           style={{
             backgroundColor: colors.primaryButton,
@@ -159,7 +168,8 @@ const ExploreScreen = ({ navigation }) => {
           horizontal
         />
       </View>
-      <View style={styles.exploreContainer}>{showResult()}</View>
+      {!loading && <View style={styles.exploreContainer}>{showResult()}</View>}
+      {loading && <ActivityIndicatorAnimation loadingStatus={loading} />}
     </ScrollView>
   );
 };

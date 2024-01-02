@@ -13,22 +13,27 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import PlantCard from "../components/plantCard";
 import fetchPlant from "../services/fetchPlant";
+import ActivityIndicatorAnimation from "../components/activityIndicatorAnimation";
 
 const SearchPlantScreen = ({ navigation, route }) => {
   const { plant } = route?.params ? route.params : [];
   const [textResult, setTextResult] = useState(plant || []);
   const [textSearch, setTextSearch] = useState("");
   const [showCamera, setShowCamera] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTextResult(plant);
+    console.log("plant", textResult);
   }, [plant]);
 
   const searchPlant = async () => {
+    setLoading(true);
     console.log("searching for plant");
     const fetchPlants = await fetchPlant(textSearch);
     console.log(fetchPlants);
     setTextResult(fetchPlants);
+    setLoading(false);
   };
   const serachResult = () => {
     return (
@@ -60,26 +65,36 @@ const SearchPlantScreen = ({ navigation, route }) => {
             onChangeText={(plant) => {
               setTextSearch(plant.toLowerCase());
             }}
+            onSubmitEditing={searchPlant}
           />
           <TouchableOpacity onPress={searchPlant} style={styles.searchButton}>
             <FontAwesome name="search" size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: "center", paddingHorizontal: 20, flex: 1 }}>
-          {serachResult()}
-        </View>
-
-        {textResult && (
+        {!loading && (
+          <View
+            style={{ alignItems: "center", paddingHorizontal: 20, flex: 1 }}
+          >
+            {serachResult()}
+          </View>
+        )}
+        {(typeof textResult == "undefined" || textResult.length == 0) && (
           <View
             style={{
               alignItems: "center",
-              marginTop: 20,
+              marginTop: 250,
               justifyContent: "center",
+              opacity: 0.5,
+              // position: "absolute",
+              // top: "50%",
+              // left: "50%",
+              // transform: [{ translateX: -100 }, { translateY: -100 }],
             }}
           >
             <Text style={{ fontSize: 20 }}>No results found</Text>
           </View>
         )}
+        {loading && <ActivityIndicatorAnimation loadingStatus={loading} />}
       </ScrollView>
       <TouchableOpacity
         style={styles.scanButton}
@@ -87,9 +102,9 @@ const SearchPlantScreen = ({ navigation, route }) => {
       >
         <Image
           source={require("../../assets/lens.png")}
-          width={40}
-          height={40}
-          style={{ borderRadius: 20 }}
+          // width={50}
+          // height={50}
+          style={{ borderRadius: 10 }}
         />
       </TouchableOpacity>
     </SafeAreaView>
@@ -114,7 +129,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     marginHorizontal: 20,
-    marginTop: 40,
+    marginTop: 10,
     marginBottom: 10,
     justifyContent: "space-between",
     backgroundColor: "#CACFC0",
@@ -143,9 +158,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 10,
     right: "5%",
-    width: 40,
-    height: 40,
-    borderRadius: 50,
+    width: 60,
+    height: 60,
+    borderRadius: 20,
     backgroundColor: "#5F7A5D",
     justifyContent: "center",
     alignItems: "center",
