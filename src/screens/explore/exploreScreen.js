@@ -8,13 +8,14 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
-import colors from "../variables/colors";
-import PlantCard from "../components/plantCard";
+import colors from "../../variables/colors";
+import PlantCard from "../../components/plantCard";
 import fetch from "node-fetch";
 import { AntDesign } from "@expo/vector-icons";
-import fetchCategory from "../services/fetchCategory";
+import fetchCategory from "../../services/fetchCategory";
 import { set } from "date-fns";
-import ActivityIndicatorAnimation from "../components/activityIndicatorAnimation";
+import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimation";
+import { plantsCategory, speciesCategory } from "../../variables/assets";
 
 const ExploreScreen = ({ navigation }) => {
   const [textResult, setTextResult] = useState([]);
@@ -23,8 +24,8 @@ const ExploreScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   // Define an array of species or classifications
   const species = [
-    { id: 1, name: "plants" },
-    { id: 3, name: "species" },
+    { id: 1, name: "plants", image: plantsCategory },
+    { id: 3, name: "species", image: speciesCategory },
     // Add more species as needed
   ];
 
@@ -35,15 +36,10 @@ const ExploreScreen = ({ navigation }) => {
         onPress={() => {
           setPageNo(1);
           setCategory(item.name);
-          fetchCategory(pageNo, category);
+          fetchCategory(pageNo, item.name);
         }}
       >
-        <Image
-          source={{
-            uri: "https://storage.googleapis.com/powop-assets/neotropikey/tapura_peruviana_1_fullsize.jpg",
-          }}
-          style={styles.categoryImage}
-        />
+        <Image source={item.image} style={styles.categoryImage} />
         <View
           style={{
             flexDirection: "row",
@@ -67,9 +63,11 @@ const ExploreScreen = ({ navigation }) => {
         style={{
           // flex: 1,
           backgroundColor: colors.primaryBackground,
-          width: "48%",
-          marginLeft: "2%",
+          width: "47%",
+          marginHorizontal: "1%",
           alignSelf: "center",
+          height: 430,
+          marginBottom: 10,
         }}
       >
         <PlantCard key={item.id + item.name} plant={item} />

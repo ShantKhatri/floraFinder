@@ -18,12 +18,11 @@ import {
 } from "react-native";
 import UserProfileStack from "../stackNavigator/UserProfileStack";
 import HomeScreen from "../../screens/homeScreen";
-import ExploreScreen from "../../screens/exploreScreen";
-import SearchPlantScreen from "../../screens/searchPlant";
 import colors from "../../variables/colors";
 import { Ionicons } from "@expo/vector-icons";
 import SearchPlantStack from "../stackNavigator/SearchPlantStack";
 import { useNavigation } from "@react-navigation/native";
+import ExploreStack from "../stackNavigator/ExploreStack";
 // import { Settings } from "react-native";
 
 const Tab = createBottomTabNavigator();
@@ -100,7 +99,7 @@ const BottomTab = () => {
       />
       <Tab.Screen
         name="Explore"
-        component={ExploreScreen}
+        component={ExploreStack}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
