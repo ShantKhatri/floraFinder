@@ -37,12 +37,6 @@ const PlantScanner = ({ navigation }) => {
     })();
   }, []);
 
-  function toggleCameraType() {
-    setType((current) =>
-      current === CameraType.back ? CameraType.front : CameraType.back
-    );
-  }
-
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -105,7 +99,7 @@ const PlantScanner = ({ navigation }) => {
 
           <TouchableOpacity
             style={styles.closeButton}
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("SearchResult")}
           >
             <Ionicons name="close" size={24} color="black" />
           </TouchableOpacity>
