@@ -86,7 +86,13 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ alignItems: "center", flex: 1 }}>
+    <SafeAreaView
+      style={{
+        alignItems: "center",
+        flex: 1,
+        backgroundColor: colors.secondaryBackground,
+      }}
+    >
       <View style={{ alignItems: "center", width: "100%" }}>
         {loadingComplete && (
           <PlantOfTheDayCard
@@ -95,7 +101,7 @@ const HomeScreen = () => {
           />
         )}
       </View>
-      {(loading || !loadingComplete) && (
+      {(!loadingComplete || loading) && (
         <ActivityIndicatorAnimation loadingStatus={loading} />
       )}
       <View style={styles.outerCircle}>

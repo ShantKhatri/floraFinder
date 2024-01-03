@@ -20,18 +20,16 @@ const PlantOfTheDayCard = ({ plant }) => {
   const [openModal, setOpenModal] = useState(false);
 
   const {
-    common_name,
     slug,
     scientific_name,
     image_url,
-    year,
-    family_common_name,
+    // family_common_name,
+    family,
     observations,
-    vegetable,
-    links,
+    // links,
     main_species,
   } = plant;
-  console.log("MAIN SPECIES", main_species);
+  // console.log("MAIN SPECIES", main_species.images);
 
   const mainSpeciesData = [
     { key: "Slug", value: main_species.slug },
@@ -41,33 +39,11 @@ const PlantOfTheDayCard = ({ plant }) => {
     { key: "Author", value: main_species.author },
     { key: "Rank", value: main_species.rank },
     { key: "Observations", value: main_species.observations },
-    { key: "Vegetable", value: main_species.vegetable },
+    { key: "Vegetable", value: main_species.vegetable == true ? "Yes" : "No" },
     { key: "Genus", value: main_species.genus },
     { key: "Family", value: main_species.family },
-    { key: "Edible", value: main_species.edible },
+    { key: "Edible", value: main_species.edible == true ? "Yes" : "No" },
   ];
-
-  const handleLinkPress = (url) => {
-    Linking.openURL(url);
-  };
-  //   const synonymsText = [synonyms[0], synonyms[1], synonyms[2]].join(", ");
-
-  // const synonymsShow = () => {
-  //   return (
-  //     <FlatList
-  //       data={synonyms}
-  //       keyExtractor={(item, index) => index.toString()}
-  //       // horizontal={true}
-  //       // showsHorizontalScrollIndicator={false}
-  //       contentContainerStyle={styles.listContainer}
-  //       renderItem={({ item }) => (
-  //         <TouchableOpacity style={styles.synonymContainer}>
-  //           <Text style={styles.synonymText}>{item}</Text>
-  //         </TouchableOpacity>
-  //       )}
-  //     />
-  //   );
-  // };
 
   const FlowerIcon = () => (
     <MaterialCommunityIcons
@@ -77,14 +53,31 @@ const PlantOfTheDayCard = ({ plant }) => {
     />
   );
 
+  const getImageUrls = () => {
+    let imageUrls = [];
+    for (const key in main_species.images) {
+      if (
+        main_species.images.hasOwnProperty(key) &&
+        Array.isArray(main_species.images[key]) &&
+        main_species.images[key].length > 0
+      ) {
+        main_species.images[key][0].image_url != image_url &&
+          imageUrls.push(main_species.images[key][0].image_url);
+      }
+    }
+    return imageUrls;
+  };
+  const subImagesUrls = getImageUrls();
+  console.log("IMAGE URLS", subImagesUrls);
+
   return (
     <ScrollView
       style={styles.card}
-      contentContainerStyle={{ paddingBottom: 16 }}
+      contentContainerStyle={{ paddingBottom: 150 }}
       //   onPress={() => setOpenModal(!openModal)}
     >
       <View style={styles.titleContainer}>
-        <Text style={styles.cardTitle}>{family_common_name}</Text>
+        <Text style={styles.cardTitle}>{family.name}</Text>
       </View>
       <View style={styles.scientificNameContainer}>
         <FlowerIcon />
@@ -93,17 +86,14 @@ const PlantOfTheDayCard = ({ plant }) => {
       </View>
       {image_url && (
         <View style={styles.imageContainer}>
-          <Image source={{ uri: image_url }} style={styles.cardImage} />
+          <Image
+            source={{ uri: image_url }}
+            style={styles.cardImage}
+            // width={"100%"}
+            // height={"auto"}
+          />
         </View>
       )}
-      {/* <View style={styles.cardContent}>
-        <View style={styles.cardSynonyms}>
-          <Text style={styles.synonymsTitle}>Synonyms:</Text>
-          <Text style={[styles.synonymsText, { fontSize: 12 }]}>
-            {synonymsText} ...
-          </Text>
-        </View>
-      </View> */}
       <View style={styles.slugContainer}>
         <Text style={styles.slugTitle}>Slug:</Text>
         <Text style={styles.slug}>{slug}</Text>
@@ -129,24 +119,67 @@ const PlantOfTheDayCard = ({ plant }) => {
           paddingVertical: 8,
         }}
       >
-        <FlatList
-          data={mainSpeciesData}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
+        {mainSpeciesData.map((item, index) => {
+          return item.key == "Bibliography" || item.key == "Observations" ? (
             <View
+              key={index}
               style={{
                 ...styles.speciesDetailsContainer,
-                // flexDirection: item.value.lenght > 25 ? "column" : "row",
+                backgroundColor: index % 2 == 0 ? "#e7f0c3" : "#c2d6a3",
+                flexDirection: "column",
+                height: "auto",
               }}
             >
-              <Text style={styles.speciesDetailKey}>{item.key}:</Text>
+              <Text style={styles.speciesDetailKey}>{item.key}</Text>
               <Text style={styles.speciesValueText}>{item.value}</Text>
             </View>
-          )}
-        />
+          ) : (
+            <View
+              key={index}
+              style={{
+                ...styles.speciesDetailsContainer,
+                backgroundColor: index % 2 == 0 ? "#e7f0c3" : "#c2d6a3",
+              }}
+            >
+              <Text style={styles.speciesDetailKey}>{item.key}</Text>
+              <Text style={styles.speciesValueText}>{item.value}</Text>
+            </View>
+          );
+        })}
       </View>
 
-      <View style={styles.cardLinks}>
+      {subImagesUrls.length > 0 && (
+        <View
+          style={{
+            ...styles.subImagesContainer,
+            flexWrap: "wrap-reverse",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          {subImagesUrls.map((image, index) => {
+            return (
+              <View
+                key={index}
+                style={{
+                  ...styles.subImageContainer,
+                  width: index == 0 ? "100%" : "48%",
+                }}
+              >
+                <Image
+                  source={{ uri: image }}
+                  style={styles.subCardImage}
+                  // width={100}
+                  // height={100}
+                />
+              </View>
+            );
+          })}
+          <Text style={styles.imagesTitle}>Images</Text>
+        </View>
+      )}
+
+      {/* <View style={styles.cardLinks}>
         <Text style={styles.linksTitle}>Links:</Text>
         <TouchableOpacity onPress={() => handleLinkPress(links.self)}>
           <Text style={styles.link}>
@@ -166,7 +199,7 @@ const PlantOfTheDayCard = ({ plant }) => {
             <Text style={styles.linkUrl}>{links.genus}</Text>
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </ScrollView>
   );
 };
@@ -180,6 +213,7 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     elevation: 2,
     width: "100%",
+    // height: "100%",
   },
   titleContainer: {
     width: "100%",
@@ -194,14 +228,14 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: "40%",
+    // height: "40%",
     borderRadius: 8,
     marginBottom: 8,
   },
   cardImage: {
-    width: "100%",
-    height: "100%",
     borderRadius: 8,
+    width: "100%",
+    height: 400,
   },
   cardContent: {
     // flex: 1,
@@ -311,6 +345,26 @@ const styles = StyleSheet.create({
   synonymText: {
     color: "#2e7d32",
     fontSize: 8,
+  },
+  subImageContainer: {
+    // width: "48%",
+    // height: "40%",
+    borderRadius: 8,
+    marginBottom: 8,
+    marginHorizontal: "1%",
+  },
+  subCardImage: {
+    borderRadius: 8,
+    width: "100%",
+    height: 200,
+  },
+  imagesTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 4,
+    color: colors.primaryButton,
+    textAlign: "center",
+    alignSelf: "center",
   },
 });
 
