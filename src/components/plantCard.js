@@ -13,33 +13,46 @@ import {
 import Modal, { ReactNativeModal } from "react-native-modal";
 import colors from "../variables/colors";
 import FavouriteButton from "./favourite";
+import { useNavigation } from "@react-navigation/native";
 const PlantCard = ({ plant }) => {
   const [openModal, setOpenModal] = useState(false);
 
-  const { common_name, scientific_name, image_url, synonyms, links, id } =
-    plant;
+  const navigation = useNavigation();
 
-  const handleLinkPress = (url) => {
-    Linking.openURL(url);
-  };
+  const {
+    common_name,
+    scientific_name,
+    image_url,
+    synonyms,
+    links,
+    id,
+    slug,
+    year,
+    family,
+    genus,
+    rank,
+  } = plant;
+
+  const mainSpeciesData = [
+    { key: "Slug", value: slug },
+    { key: "Year", value: year },
+    { key: "Family", value: family },
+    { key: "Genus", value: genus },
+    { key: "Rank", value: rank },
+  ];
+
   const synonymsText = [synonyms[0], synonyms[1], synonyms[2]].join(", ");
 
-  // const synonymsShow = () => {
-  //   return (
-  //     <FlatList
-  //       data={synonyms}
-  //       keyExtractor={(item, index) => index.toString()}
-  //       // horizontal={true}
-  //       // showsHorizontalScrollIndicator={false}
-  //       contentContainerStyle={styles.listContainer}
-  //       renderItem={({ item }) => (
-  //         <TouchableOpacity style={styles.synonymContainer}>
-  //           <Text style={styles.synonymText}>{item}</Text>
-  //         </TouchableOpacity>
-  //       )}
-  //     />
-  //   );
-  // };
+  const renderSynonyms = () => {
+    return synonyms.map((item, index) => (
+      <View
+        key={index}
+        style={[styles.synonymItem, { backgroundColor: item.bgColor }]}
+      >
+        <Text style={styles.synonymText}>{item}</Text>
+      </View>
+    ));
+  };
 
   return (
     <TouchableOpacity
@@ -92,13 +105,32 @@ const PlantCard = ({ plant }) => {
             </View>
             <View style={styles.cardSynonyms}>
               <Text style={styles.synonymsTitle}>Synonyms:</Text>
-              {/* <Text style={[styles.synonymsText, { fontSize: 12 }]}>
-                {synonyms.join(",")} ...
-              </Text> */}
-              {/* {synonymsShow()} */}
+              <View style={styles.listContainer}>{renderSynonyms()}</View>
             </View>
           </View>
-          <View style={styles.cardLinks}>
+          <View
+            style={{
+              ...styles.mainSpeciesContainer,
+              borderTopWidth: 1,
+              marginVertical: 16,
+              paddingVertical: 8,
+              width: "100%",
+            }}
+          >
+            {mainSpeciesData.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  ...styles.speciesDetailsContainer,
+                  backgroundColor: index % 2 == 0 ? "#e7f0c3" : "#c2d6a3",
+                }}
+              >
+                <Text style={styles.speciesDetailKey}>{item.key}</Text>
+                <Text style={styles.speciesValueText}>{item.value}</Text>
+              </View>
+            ))}
+          </View>
+          {/* <View style={styles.cardLinks}>
             <Text style={styles.linksTitle}>Links:</Text>
             <TouchableOpacity onPress={() => handleLinkPress(links.self)}>
               <Text style={styles.link}>
@@ -118,8 +150,40 @@ const PlantCard = ({ plant }) => {
                 <Text style={styles.linkUrl}>{links.genus}</Text>
               </Text>
             </TouchableOpacity>
-          </View>
-          <Button title="Close" onPress={() => setOpenModal(!openModal)} />
+          </View> */}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Explore", {
+                screen: "PlantDetails",
+                params: { plantPath: links.plant },
+              });
+            }}
+            style={{
+              ...styles.button,
+              backgroundColor: colors.primaryButton,
+              marginBottom: 16,
+              paddingVertical: 8,
+              width: "80%",
+              borderRadius: 12,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                color: colors.secondaryButton,
+              }}
+            >
+              Know More
+            </Text>
+          </TouchableOpacity>
+          <Button
+            title="Close"
+            onPress={() => setOpenModal(!openModal)}
+            color={colors.primaryButton}
+          />
         </ScrollView>
       </Modal>
     </TouchableOpacity>
@@ -136,6 +200,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: "100%",
     marginBottom: 16,
+    height: "100%",
   },
   cardImage: {
     width: "100%",
@@ -201,19 +266,52 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   listContainer: {
-    alignItems: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   synonymContainer: {
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
     backgroundColor: "#e7f0c3",
-    padding: 10,
+    // padding: 10,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "#c2d6a3",
   },
   synonymText: {
-    color: "#2e7d32",
-    fontSize: 8,
+    color: colors.secondaryButton,
+    fontSize: 10,
+    backgroundColor: colors.primaryButton,
+    margin: 1,
+    paddingHorizontal: 1,
+    borderRadius: 4,
+  },
+  synonymItem: {
+    // margin: 8,
+    // padding: 12,
+    // backgroundColor: colors.secondaryButton,
+    borderRadius: 8,
+    minWidth: 50,
+  },
+  speciesDetailsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+    padding: 8,
+    width: "100%",
+    borderRadius: 16,
+  },
+  speciesDetailKey: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 4,
+    color: colors.primaryButton,
+  },
+  speciesValueText: {
+    fontSize: 16,
+    marginBottom: 4,
+    color: colors.primaryButton,
+    textAlign: "center",
   },
 });
 
