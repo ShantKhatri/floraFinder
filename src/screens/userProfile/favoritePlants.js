@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import PlantCard from "../../components/plantCard";
 import colors from "../../variables/colors";
 import { FavouritesContext } from "../../contexts/FavouritesContext";
@@ -19,7 +19,11 @@ const FavoritePlantsScreen = () => {
       <View style={{ alignItems: "center" }}>
         <FlatList
           data={favouritesArray}
-          renderItem={({ item }) => <PlantCard key={item.id} plant={item} />}
+          renderItem={({ item }) => (
+            <View style={{ height: 375, marginBottom: 16 }}>
+              <PlantCard key={item.id} plant={item} />
+            </View>
+          )}
           keyExtractor={(item) => item.id}
         />
       </View>
@@ -29,7 +33,10 @@ const FavoritePlantsScreen = () => {
     <View style={styles.container}>{favouritePlants()}</View>
   ) : (
     <View style={styles.container}>
-      <Text style={{ fontSize: 20 }}>No Favourite Plants</Text>
+      <View style={{ opacity: 0.5 }}>
+        <Image source={require("../../../assets/cryingPlant.png")} />
+        {/* <Text style={{ fontSize: 24 }}>No Favourite Plants</Text> */}
+      </View>
     </View>
   );
 };
@@ -39,7 +46,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
+    padding: 16,
     backgroundColor: colors.primaryBackground,
   },
 });
