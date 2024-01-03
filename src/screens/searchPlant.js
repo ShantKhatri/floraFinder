@@ -40,7 +40,11 @@ const SearchPlantScreen = ({ navigation, route }) => {
       <View style={{ alignItems: "center" }}>
         <FlatList
           data={textResult}
-          renderItem={({ item }) => <PlantCard key={item.id} plant={item} />}
+          renderItem={({ item }) => (
+            <View style={{ height: 375, marginBottom: 16 }}>
+              <PlantCard key={item.id} plant={item} />
+            </View>
+          )}
           keyExtractor={(item) => item.id}
         />
       </View>
@@ -78,24 +82,29 @@ const SearchPlantScreen = ({ navigation, route }) => {
             {serachResult()}
           </View>
         )}
-        {(typeof textResult == "undefined" || textResult.length == 0) && (
-          <View
-            style={{
-              alignItems: "center",
-              marginTop: 250,
-              justifyContent: "center",
-              opacity: 0.5,
-              // position: "absolute",
-              // top: "50%",
-              // left: "50%",
-              // transform: [{ translateX: -100 }, { translateY: -100 }],
-            }}
-          >
-            <Text style={{ fontSize: 20 }}>No results found</Text>
-          </View>
-        )}
+
         {loading && <ActivityIndicatorAnimation loadingStatus={loading} />}
       </ScrollView>
+      {(typeof textResult == "undefined" || textResult.length == 0) && (
+        <View
+          style={{
+            // flex: 1,
+            alignItems: "center",
+            // marginTop: 250,
+            justifyContent: "center",
+            opacity: 0.5,
+            // backgroundColor: "red",
+            height: "90%",
+            // position: "absolute",
+            // top: "50%",
+            // left: "50%",
+            // transform: [{ translateX: -100 }, { translateY: -100 }],
+          }}
+        >
+          <Image source={require("../../assets/searchAlter1.png")} />
+          {/* <Text style={{ fontSize: 20 }}>No results found</Text> */}
+        </View>
+      )}
       <TouchableOpacity
         style={styles.scanButton}
         onPress={() => navigation.navigate("PlantScanner")}
