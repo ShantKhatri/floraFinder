@@ -42,7 +42,16 @@ const SearchPlantScreen = ({ navigation, route }) => {
           data={textResult}
           renderItem={({ item }) => (
             <View style={{ height: 375, marginBottom: 16 }}>
-              <PlantCard key={item.id} plant={item} />
+              <PlantCard
+                key={item.id}
+                plant={item}
+                pressKnowMore={(path) =>
+                  navigation.navigate("Explore", {
+                    screen: "PlantDetails",
+                    params: { plantPath: path },
+                  })
+                }
+              />
             </View>
           )}
           keyExtractor={(item) => item.id}

@@ -19,7 +19,6 @@ const PlantDetails = ({ route }) => {
   const { plantPath } = route?.params;
   console.log("plantPath", plantPath);
   const [plantDetails, setPlantDetails] = useState({});
-  const [selectedPlant, setSelectedPlant] = useState(1);
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -28,8 +27,8 @@ const PlantDetails = ({ route }) => {
   const fetchPlant = async () => {
     try {
       const data = await fetchPlantDetails(plantPath);
-      console.log("DATA", data);
       setPlantDetails(data);
+      console.log("DATA", data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching plants of the day:", error);

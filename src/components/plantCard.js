@@ -14,7 +14,7 @@ import Modal, { ReactNativeModal } from "react-native-modal";
 import colors from "../variables/colors";
 import FavouriteButton from "./favourite";
 import { useNavigation } from "@react-navigation/native";
-const PlantCard = ({ plant }) => {
+const PlantCard = ({ plant, pressKnowMore }) => {
   const [openModal, setOpenModal] = useState(false);
 
   const navigation = useNavigation();
@@ -153,10 +153,7 @@ const PlantCard = ({ plant }) => {
           </View> */}
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Explore", {
-                screen: "PlantDetails",
-                params: { plantPath: links.plant },
-              });
+              pressKnowMore(links.plant);
             }}
             style={{
               ...styles.button,

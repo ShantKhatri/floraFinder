@@ -4,7 +4,7 @@ import PlantCard from "../../components/plantCard";
 import colors from "../../variables/colors";
 import { FavouritesContext } from "../../contexts/FavouritesContext";
 
-const FavoritePlantsScreen = () => {
+const FavoritePlantsScreen = ({ navigation }) => {
   const { favourites } = useContext(FavouritesContext);
   let favouritesArray = [...favourites];
   useEffect(() => {
@@ -21,7 +21,16 @@ const FavoritePlantsScreen = () => {
           data={favouritesArray}
           renderItem={({ item }) => (
             <View style={{ height: 375, marginBottom: 16 }}>
-              <PlantCard key={item.id} plant={item} />
+              <PlantCard
+                key={item.id}
+                plant={item}
+                pressKnowMore={(path) =>
+                  navigation.navigate("Explore", {
+                    screen: "PlantDetails",
+                    params: { plantPath: path },
+                  })
+                }
+              />
             </View>
           )}
           keyExtractor={(item) => item.id}

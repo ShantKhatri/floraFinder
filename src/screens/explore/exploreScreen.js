@@ -70,7 +70,15 @@ const ExploreScreen = ({ navigation }) => {
           marginBottom: 10,
         }}
       >
-        <PlantCard key={item.id + item.name} plant={item} />
+        <PlantCard
+          key={item.id + item.name}
+          plant={item}
+          pressKnowMore={(path) =>
+            navigation.navigate("PlantDetails", {
+              plantPath: path,
+            })
+          }
+        />
       </View>
     );
   };
