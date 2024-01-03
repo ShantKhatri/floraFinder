@@ -112,12 +112,17 @@ const CameraImagePicker = ({ navigation }) => {
 
           <TouchableOpacity
             style={styles.closeButton}
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("UserProfileScreen")}
           >
             <Ionicons name="close" size={24} color="black" />
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
-            <View style={styles.button} />
+            <TouchableOpacity
+              style={{ ...styles.button, alignItems: "flex-start" }}
+              onPress={toggleCameraType}
+            >
+              <Ionicons name="md-camera-reverse" size={42} color="white" />
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.captureButton}
               onPress={takePicture}
@@ -155,7 +160,10 @@ const CameraImagePicker = ({ navigation }) => {
                 </View>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={pickImage}>
+            <TouchableOpacity
+              style={{ ...styles.button, alignItems: "flex-end" }}
+              onPress={pickImage}
+            >
               <Ionicons name="md-images" size={42} color="white" />
             </TouchableOpacity>
           </View>
@@ -187,7 +195,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   button: {
-    alignItems: "flex-end",
     backgroundColor: "transparent",
     marginBottom: 10,
     width: "33%",
