@@ -1,6 +1,6 @@
 // App.js
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   Foundation,
@@ -21,15 +21,41 @@ import HomeScreen from "../../screens/homeScreen";
 import colors from "../../variables/colors";
 import { Ionicons } from "@expo/vector-icons";
 import SearchPlantStack from "../stackNavigator/SearchPlantStack";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import ExploreStack from "../stackNavigator/ExploreStack";
+import { Audio } from "expo-av";
 // import { Settings } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTab = () => {
   const navigation = useNavigation();
+  const [sound, setSound] = useState();
+  useEffect(() => {
+    const loadSound = async () => {
+      console.log("Loading Sound");
+      const { sound } = await Audio.Sound.createAsync(
+        require("../../../assets/button1.mp3")
+      );
+      setSound(sound);
+    };
 
+    loadSound();
+
+    return () => {
+      if (sound) {
+        console.log("Unloading Sound");
+        sound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const playSound = async () => {
+    if (sound) {
+      console.log("Playing Sound");
+      await sound.replayAsync();
+    }
+  };
   const header = (title) => {
     return (
       <View
@@ -44,7 +70,12 @@ const BottomTab = () => {
           paddingHorizontal: 16,
         }}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => {
+            playSound();
+            navigation.goBack();
+          }}
+        >
           <Ionicons name="arrow-back-sharp" size={24} color="black" />
         </TouchableOpacity>
         <Text style={{ fontSize: 32, fontWeight: "bold", color: "#133B31" }}>
@@ -52,9 +83,10 @@ const BottomTab = () => {
         </Text>
         <TouchableOpacity
           style={styles.scanButton}
-          onPress={() =>
-            navigation.navigate("Search", { screen: "PlantScanner" })
-          }
+          onPress={() => {
+            playSound();
+            navigation.navigate("Search", { screen: "PlantScanner" });
+          }}
         >
           <Image
             source={require("../../../assets/lens.png")}
