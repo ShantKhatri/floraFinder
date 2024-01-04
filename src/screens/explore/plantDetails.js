@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import PlantOfTheDayCard from "../../components/plantOfTheDayCard";
 import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimation";
 import fetchPlantDetails from "../../services/fetchPlantDetails";
 import colors from "../../variables/colors";
+import { useFocusEffect } from "@react-navigation/native";
 
 const PlantDetails = ({ route }) => {
   console.log("route", route);
@@ -35,11 +36,19 @@ const PlantDetails = ({ route }) => {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      console.log("USE EFFECT");
+      fetchPlant();
+    }, [plantPath])
+  );
+
   useEffect(() => {
     setLoading(true);
     console.log("USE EFFECT");
     fetchPlant();
-  }, []);
+  }, [plantPath]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,7 +60,7 @@ const PlantDetails = ({ route }) => {
     };
 
     fetchData();
-  }, []);
+  }, [plantPath]);
 
   // const image1 = plantDetails[1].image_url;
 
@@ -71,9 +80,11 @@ const PlantDetails = ({ route }) => {
           />
         )}
       </View>
-      {(!loadingComplete || loading) && (
-        <ActivityIndicatorAnimation loadingStatus={loading} />
-      )}
+      <View style={{ flex: 1, width: "100%" }}>
+        {!loadingComplete && (
+          <ActivityIndicatorAnimation loadingStatus={loading} />
+        )}
+      </View>
     </SafeAreaView>
   );
 };

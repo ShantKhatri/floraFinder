@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import colors from "../variables/colors";
 
 const ActivityIndicatorAnimation = ({ loadingStatus }) => {
   const [loading, setLoading] = useState(loadingStatus);
+  useEffect(() => {
+    setLoading(loadingStatus);
+  }, [loadingStatus]);
   return (
     <View style={styles.modalContainer}>
       <ActivityIndicator
@@ -21,6 +24,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.primaryBackground,
+    // backgroundColor: "red",
     // opacity: 0.5,
   },
 });
