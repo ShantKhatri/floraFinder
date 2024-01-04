@@ -9,6 +9,7 @@ import {
   ScrollView,
   FlatList,
   ImageBackground,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Modal, { ReactNativeModal } from "react-native-modal";
 import colors from "../variables/colors";
@@ -62,7 +63,6 @@ const PlantCard = ({ plant, pressKnowMore }) => {
       <ImageBackground source={{ uri: image_url }} style={styles.cardImage}>
         <View
           style={{
-            position: "absolute",
             zIndex: 1,
             alignSelf: "flex-end",
             // marginRight: "10%",
@@ -151,22 +151,31 @@ const PlantCard = ({ plant, pressKnowMore }) => {
               </Text>
             </TouchableOpacity>
           </View> */}
-          <TouchableOpacity
-            onPress={() => {
-              pressKnowMore(links.plant);
-            }}
+          <View
             style={{
-              ...styles.button,
-              backgroundColor: colors.primaryButton,
+              // backgroundColor: colors.primaryButton,
               marginBottom: 16,
-              paddingVertical: 8,
+              // paddingVertical: 8,
               width: "80%",
               borderRadius: 12,
-              alignItems: "center",
-              justifyContent: "center",
+              // alignItems: "center",
+              // justifyContent: "center",
             }}
           >
-            <Text
+            <Button
+              title="Know More"
+              onPress={() => {
+                setOpenModal(!openModal);
+                pressKnowMore(links.plant);
+              }}
+              // style={{
+              //   ...styles.button,
+
+              // }}
+              color={colors.primaryButton}
+            />
+          </View>
+          {/* <Text
               style={{
                 fontSize: 16,
                 fontWeight: "bold",
@@ -174,8 +183,8 @@ const PlantCard = ({ plant, pressKnowMore }) => {
               }}
             >
               Know More
-            </Text>
-          </TouchableOpacity>
+            </Text> */}
+          {/* </Button> */}
           <Button
             title="Close"
             onPress={() => setOpenModal(!openModal)}
