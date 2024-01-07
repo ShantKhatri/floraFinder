@@ -152,18 +152,19 @@ const PlantOfTheDayCard = ({ plant }) => {
         <View
           style={{
             ...styles.subImagesContainer,
-            flexWrap: "wrap-reverse",
+            flexWrap: "wrap",
             flexDirection: "row",
             justifyContent: "center",
           }}
         >
+          <Text style={styles.imagesTitle}>Images</Text>
           {subImagesUrls.map((image, index) => {
             return (
               <View
                 key={index}
                 style={{
                   ...styles.subImageContainer,
-                  width: index == 0 ? "100%" : "48%",
+                  width: index == subImagesUrls.length - 1 ? "100%" : "48%",
                 }}
               >
                 <Image
@@ -175,7 +176,6 @@ const PlantOfTheDayCard = ({ plant }) => {
               </View>
             );
           })}
-          <Text style={styles.imagesTitle}>Images</Text>
         </View>
       )}
 
@@ -365,6 +365,7 @@ const styles = StyleSheet.create({
     color: colors.primaryButton,
     textAlign: "center",
     alignSelf: "center",
+    width: "100%",
   },
 });
 
