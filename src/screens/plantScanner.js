@@ -149,7 +149,6 @@ const PlantScanner = ({ navigation }) => {
         </Camera>
       )}
       {loading && <ActivityIndicatorAnimation loadingStatus={loading} />}
-      {/* <StatusBar style="auto" /> */}
     </View>
   );
 };
