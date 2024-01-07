@@ -20,6 +20,7 @@
     "@react-navigation/stack": "^6.3.20",
     "date-fns": "^3.0.6",
     "expo": "~49.0.15",
+    "expo-av": "~13.4.1",
     "expo-camera": "~13.4.4",
     "expo-file-system": "~15.4.5",
     "expo-image-picker": "~14.3.2",
@@ -32,11 +33,11 @@
     "react-native-modal": "^13.0.1",
     "react-native-reanimated": "~3.3.0",
     "react-native-safe-area-context": "4.6.3",
-    "react-native-screens": "~3.22.0",
-    "expo-av": "~13.4.1"
+    "react-native-screens": "~3.22.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.4"
   },
   "private": true
 }
