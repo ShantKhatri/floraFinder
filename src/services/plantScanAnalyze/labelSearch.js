@@ -14,7 +14,7 @@ const LabelSearch = async (image) => {
     // const query = "oak";
     console.log("query", query);
     console.log("searching for plant from labelSearch after VisionResult");
-    const response = await fetchPlant(query);
+    const response = query == null ? null : await fetchPlant(query);
     console.log("searching for plant from labelSearch after fetchPlant");
     // if (!response.ok) {
     //   throw new Error(`Error fetching data: ${response.statusText}`);
