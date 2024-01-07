@@ -2,23 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Camera, CameraType } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import {
-  ActivityIndicator,
-  Modal,
   StyleSheet,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-import LabelSearch from "../../services/plantScanAnalyze/labelSearch";
-import colors from "../../variables/colors";
-import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CameraImagePicker = ({ navigation }) => {
+  const { width } = useWindowDimensions();
+  const height = Math.round((width * 16) / 9);
   const [type, setType] = useState(CameraType.back);
-  const [result, setResult] = useState([]);
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [camera, setCamera] = useState(null);
@@ -46,8 +43,7 @@ const CameraImagePicker = ({ navigation }) => {
 
   const StoreProfilePicture = async (image) => {
     try {
-      const jsonValue = JSON.stringify(image);
-      await AsyncStorage.setItem("profilePicture", jsonValue);
+      await AsyncStorage.setItem("profilePicture", image);
       navigation.goBack();
     } catch (error) {
       console.error(error);
@@ -94,6 +90,7 @@ const CameraImagePicker = ({ navigation }) => {
     <View style={styles.container}>
       {cameraOpened && (
         <Camera
+          ratio="16:9"
           style={styles.camera}
           type={type}
           flashMode={Camera.Constants.FlashMode.auto}
@@ -169,7 +166,6 @@ const CameraImagePicker = ({ navigation }) => {
           </View>
         </Camera>
       )}
-      <StatusBar style="auto" />
     </View>
   );
 };

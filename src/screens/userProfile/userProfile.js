@@ -6,9 +6,10 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import colors from "../../variables/colors";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimation";
@@ -16,6 +17,8 @@ import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimat
 const UserProfileScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [editUserName, setEditUserName] = useState(false);
+  const [userName, setUserName] = useState("User Name");
 
   const userProfileOptions = [
     { id: 1, name: "Favorite Plants", screen: "FavoritePlants" },
@@ -24,24 +27,34 @@ const UserProfileScreen = ({ navigation }) => {
     // { id: 4, name: "Logout", screen: "Logout" },
   ];
 
-  const getProfilePicture = async () => {
+  const StoreUserName = async () => {
+    try {
+      await AsyncStorage.setItem("userName", userName);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getProfile = async () => {
     setLoading(true);
-    const jsonValue = await AsyncStorage.getItem("profilePicture");
-    const photoUri = jsonValue != null ? JSON.parse(jsonValue) : null;
-    console.log("photoUri", typeof photoUri);
-    setImage(photoUri);
+    const jsonValue = await AsyncStorage.multiGet([
+      "profilePicture",
+      "userName",
+    ]);
+    setImage(jsonValue[0][1]);
+    setUserName(jsonValue[1][1]);
     setLoading(false);
   };
 
   useFocusEffect(
     useCallback(() => {
-      getProfilePicture();
+      getProfile();
     }, [])
   );
 
   return (
     <View style={styles.container}>
-      <View style={{}}>
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
         <TouchableOpacity
           onPress={() => navigation.navigate("CameraImagePicker")}
           style={{
@@ -62,7 +75,56 @@ const UserProfileScreen = ({ navigation }) => {
           />
           {loading && <ActivityIndicatorAnimation loading={loading} />}
         </TouchableOpacity>
-        <Text style={styles.userName}>User's Name</Text>
+        {editUserName ? (
+          <View style={{ flexDirection: "row", marginVertical: 5 }}>
+            <TextInput
+              style={{
+                ...styles.userName,
+                borderWidth: 1,
+                paddingHorizontal: 8,
+                alignItems: "center",
+                justifyContent: "center",
+                // height: "100%",
+                margin: 0,
+                borderColor: colors.primaryButton,
+              }}
+              value={userName}
+              onChangeText={(name) => setUserName(name)}
+              onSubmitEditing={() => {
+                {
+                  userName == "" && setUserName("User Name");
+                }
+                setEditUserName(false);
+              }}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                {
+                  userName == "" && setUserName("User Name");
+                }
+                setEditUserName(false);
+                StoreUserName();
+              }}
+              style={{
+                backgroundColor: colors.primaryButton,
+                justifyContent: "center",
+              }}
+            >
+              <MaterialIcons
+                name="done"
+                size={24}
+                color={colors.primaryBackground}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <Text style={styles.userName}>{userName}</Text>
+            <TouchableOpacity onPress={() => setEditUserName(true)}>
+              <FontAwesome5 name="edit" size={16} color="black" />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       <View style={{ width: "100%", marginTop: 50 }}>
@@ -111,6 +173,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     margin: 10,
+    textAlign: "center",
   },
 });
 

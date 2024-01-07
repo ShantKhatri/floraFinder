@@ -9,17 +9,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { Settings } from "react-native";
 
 const App = () => {
-  const StoreProfilePicture = async (image) => {
+  const StoreProfile = async () => {
+    const profilePicture = [
+      "profilePicture",
+      "https://i.pinimg.com/564x/5e/f1/4e/5ef14efc02c7dd1da2c1d02731b6bf8f.jpg",
+    ];
+    const userName = ["userName", "User Name"];
+
+    const storedValues = await AsyncStorage.multiGet([
+      "profilePicture",
+      "userName",
+    ]);
+    if (storedValues.length == 2) {
+      return;
+    }
     try {
-      const jsonValue = JSON.stringify(image);
-      await AsyncStorage.setItem("profilePicture", jsonValue);
+      await AsyncStorage.multiSet([profilePicture, userName]);
     } catch (error) {
       console.error(error);
     }
   };
-  StoreProfilePicture(
-    "https://i.pinimg.com/564x/5e/f1/4e/5ef14efc02c7dd1da2c1d02731b6bf8f.jpg"
-  );
+  StoreProfile();
   return (
     <FavouritesProvider>
       <NavigationContainer>
