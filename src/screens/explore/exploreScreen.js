@@ -15,7 +15,6 @@ import { AntDesign } from "@expo/vector-icons";
 import fetchCategory from "../../services/fetchCategory";
 import { set } from "date-fns";
 import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimation";
-import { plantsCategory, speciesCategory } from "../../variables/assets";
 
 const ExploreScreen = ({ navigation }) => {
   const [textResult, setTextResult] = useState([]);
@@ -24,8 +23,18 @@ const ExploreScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   // Define an array of species or classifications
   const species = [
-    { id: 1, name: "plants", image: plantsCategory },
-    { id: 3, name: "species", image: speciesCategory },
+    {
+      id: 1,
+      name: "plants",
+      image:
+        "https://drive.google.com/uc?export=view&id=1ZDi9wA5ocA0ENSTYS0-ST7u3A5-Cuj5o",
+    },
+    {
+      id: 3,
+      name: "species",
+      image:
+        "https://drive.google.com/uc?export=view&id=1GexmTSCMa1nPpWy2e9IbVb66rswB-N9h",
+    },
     // Add more species as needed
   ];
 
@@ -39,7 +48,7 @@ const ExploreScreen = ({ navigation }) => {
           fetchCategory(pageNo, item.name);
         }}
       >
-        <Image source={item.image} style={styles.categoryImage} />
+        <Image source={{ uri: item.image }} style={styles.categoryImage} />
         <View
           style={{
             flexDirection: "row",
