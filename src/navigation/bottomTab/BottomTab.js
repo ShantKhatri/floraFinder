@@ -101,7 +101,7 @@ const BottomTab = () => {
   };
   return (
     <Tab.Navigator
-      initialRouteName="Search"
+      initialRouteName="SearchStack"
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         tabBarActiveTintColor: "#272D0E",
@@ -120,7 +120,7 @@ const BottomTab = () => {
       })}
     >
       <Tab.Screen
-        name="Home"
+        name="HomeStack"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -130,7 +130,7 @@ const BottomTab = () => {
         }}
       />
       <Tab.Screen
-        name="Explore"
+        name="ExploreStack"
         component={ExploreStack}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -144,7 +144,7 @@ const BottomTab = () => {
         }}
       />
       <Tab.Screen
-        name="Search"
+        name="SearchStack"
         component={SearchPlantStack}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -154,11 +154,17 @@ const BottomTab = () => {
               color={colors.primaryButton}
             />
           ),
-          header: () => null,
+          header: () => {
+            return (
+              <View>
+                <StatusBar backgroundColor={colors.secondaryBackground} />
+              </View>
+            );
+          },
         }}
       />
       <Tab.Screen
-        name="Settings"
+        name="SettingsStack"
         component={UserProfileStack}
         options={{
           tabBarIcon: ({ color, size }) => (
