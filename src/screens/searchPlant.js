@@ -9,11 +9,17 @@ import {
   ScrollView,
   FlatList,
   SafeAreaView,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Platform,
+  Keyboard,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import PlantCard from "../components/plantCard";
 import fetchPlant from "../services/fetchPlant";
 import ActivityIndicatorAnimation from "../components/activityIndicatorAnimation";
+import { StatusBar } from "expo-status-bar";
+import colors from "../variables/colors";
 
 const SearchPlantScreen = ({ navigation, route }) => {
   const { plant } = route?.params ? route.params : [];
@@ -61,71 +67,80 @@ const SearchPlantScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            selectionColor={"green"}
-            placeholder="Search for a plant"
-            placeholderTextColor="#aaaaaa"
-            onChangeText={(plant) => {
-              setTextSearch(plant.toLowerCase());
-            }}
-            onSubmitEditing={searchPlant}
-          />
-          <TouchableOpacity onPress={searchPlant} style={styles.searchButton}>
-            <FontAwesome name="search" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-        {!loading && (
-          <View
-            style={{ alignItems: "center", paddingHorizontal: 20, flex: 1 }}
-          >
-            {serachResult()}
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              selectionColor={"green"}
+              placeholder="Search for a plant"
+              placeholderTextColor="#aaaaaa"
+              onChangeText={(plant) => {
+                setTextSearch(plant.toLowerCase());
+              }}
+              onSubmitEditing={searchPlant}
+            />
+            <TouchableOpacity onPress={searchPlant} style={styles.searchButton}>
+              <FontAwesome name="search" size={24} color="black" />
+            </TouchableOpacity>
           </View>
-        )}
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {!loading && (
+              <View
+                style={{ alignItems: "center", paddingHorizontal: 20, flex: 1 }}
+              >
+                {textResult != [] && textResult != null && serachResult()}
+              </View>
+            )}
 
-        {loading && <ActivityIndicatorAnimation loadingStatus={loading} />}
-      </ScrollView>
-      {(typeof textResult == "undefined" || textResult.length == 0) && (
-        <View
-          style={{
-            // flex: 1,
-            alignItems: "center",
-            // marginTop: 250,
-            justifyContent: "center",
-            opacity: 0.5,
-            // backgroundColor: "red",
-            height: "90%",
-            // position: "absolute",
-            // top: "50%",
-            // left: "50%",
-            // transform: [{ translateX: -100 }, { translateY: -100 }],
-          }}
-        >
-          <Image source={require("../../assets/searchAlter1.png")} />
-          {/* <Text style={{ fontSize: 20 }}>No results found</Text> */}
-        </View>
-      )}
-      <TouchableOpacity
-        style={styles.scanButton}
-        onPress={() => navigation.navigate("PlantScanner")}
-      >
-        <Image
-          source={require("../../assets/lens.png")}
-          // width={50}
-          // height={50}
-          style={{ borderRadius: 10 }}
-        />
-      </TouchableOpacity>
-    </SafeAreaView>
+            {loading && <ActivityIndicatorAnimation loadingStatus={loading} />}
+          </ScrollView>
+          {(typeof textResult == "undefined" ||
+            textResult == [] ||
+            textResult == null) && (
+            <View
+              style={{
+                // flex: 1,
+                alignItems: "center",
+                // marginTop: 250,
+                justifyContent: "center",
+                opacity: 0.5,
+                // backgroundColor: "red",
+                height: "90%",
+                // position: "absolute",
+                // top: "50%",
+                // left: "50%",
+                // transform: [{ translateX: -100 }, { translateY: -100 }],
+              }}
+            >
+              <Image source={require("../../assets/searchAlter1.png")} />
+              {/* <Text style={{ fontSize: 20 }}>No results found</Text> */}
+            </View>
+          )}
+          <TouchableOpacity
+            style={styles.scanButton}
+            onPress={() => navigation.navigate("PlantScanner")}
+          >
+            <Image
+              source={require("../../assets/lens.png")}
+              // width={50}
+              // height={50}
+              style={{ borderRadius: 10 }}
+            />
+          </TouchableOpacity>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -134,6 +149,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ECEDE1",
     width: "100%",
+    // paddingTop: StatusBar.height,
   },
   buttonContainer: {
     flex: 0.1,
