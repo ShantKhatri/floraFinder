@@ -9,7 +9,12 @@ import {
   TextInput,
 } from "react-native";
 import colors from "../../variables/colors";
-import { AntDesign, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
+import {
+  AntDesign,
+  MaterialIcons,
+  FontAwesome5,
+  Entypo,
+} from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimation";
@@ -70,9 +75,28 @@ const UserProfileScreen = ({ navigation }) => {
           <Image
             source={{
               uri: image,
-            }} // Replace with user's image
+            }}
             style={styles.profileImage}
           />
+          <View
+            style={{
+              backgroundColor: colors.primaryButton,
+              width: 50,
+              height: 50,
+              borderRadius: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+              bottom: 5,
+              right: 10,
+            }}
+          >
+            <Entypo
+              name="camera"
+              size={24}
+              color={colors.secondaryBackground}
+            />
+          </View>
           {loading && <ActivityIndicatorAnimation loading={loading} />}
         </TouchableOpacity>
         {editUserName ? (
