@@ -1,35 +1,62 @@
 // App.js
 
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import BottomTab from "./src/navigation/bottomTab/BottomTab";
 import LoginScreen from "./src/screens/account/login/login";
 import { FavouritesProvider } from "./src/contexts/FavouritesContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { Settings } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
 
+SplashScreen.preventAutoHideAsync();
 const App = () => {
-  const StoreProfile = async () => {
-    const profilePicture = [
-      "profilePicture",
-      "https://i.pinimg.com/564x/5e/f1/4e/5ef14efc02c7dd1da2c1d02731b6bf8f.jpg",
-    ];
-    const userName = ["userName", "User Name"];
+  const [appIsReady, setAppIsReady] = useState(false);
 
-    const storedValues = await AsyncStorage.multiGet([
-      "profilePicture",
-      "userName",
-    ]);
-    if (storedValues.length == 2) {
+  useEffect(() => {
+    const prepare = async () => {
+      try {
+        StoreProfile();
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        setAppIsReady(true);
+        SplashScreen.hideAsync();
+      }
+    };
+    prepare();
+  });
+  const StoreProfile = async () => {
+    const profilePictureKey = "profilePicture";
+    const userNameKey = "userName";
+
+    const storedProfilePicture = await AsyncStorage.getItem(profilePictureKey);
+    const storedUserName = await AsyncStorage.getItem(userNameKey);
+
+    if (storedProfilePicture !== null && storedUserName !== null) {
+      console.log("Values already stored");
       return;
     }
+
+    const defaultProfilePicture =
+      "https://i.pinimg.com/564x/5e/f1/4e/5ef14efc02c7dd1da2c1d02731b6bf8f.jpg";
+    const defaultUserName = "User Name";
+
     try {
-      await AsyncStorage.multiSet([profilePicture, userName]);
+      if (storedProfilePicture === null) {
+        await AsyncStorage.setItem(profilePictureKey, defaultProfilePicture);
+      }
+
+      if (storedUserName === null) {
+        await AsyncStorage.setItem(userNameKey, defaultUserName);
+      }
+
+      console.log("Default values stored");
     } catch (error) {
       console.error(error);
     }
   };
-  StoreProfile();
+
   return (
     <FavouritesProvider>
       <NavigationContainer>
