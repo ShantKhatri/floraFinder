@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 const SearchPlantStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Search"
+      initialRouteName="SearchResult"
       screenOptions={{
         headerShown: false,
       }}
