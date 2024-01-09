@@ -4,8 +4,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import BottomTab from "./src/navigation/bottomTab/BottomTab";
 import { FavouritesProvider } from "./src/contexts/FavouritesContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Video } from "expo-av";
+import { ResizeMode, Video } from "expo-av";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 
 SplashScreen.hideAsync();
 const App = () => {
@@ -32,8 +33,34 @@ const App = () => {
   };
 
   const StoreProfile = async () => {
-    // Your existing StoreProfile function
-    // ...
+    const profilePictureKey = "profilePicture";
+    const userNameKey = "userName";
+
+    const storedProfilePicture = await AsyncStorage.getItem(profilePictureKey);
+    const storedUserName = await AsyncStorage.getItem(userNameKey);
+
+    if (storedProfilePicture !== null && storedUserName !== null) {
+      console.log("Values already stored");
+      return;
+    }
+
+    const defaultProfilePicture =
+      "https://i.pinimg.com/564x/5e/f1/4e/5ef14efc02c7dd1da2c1d02731b6bf8f.jpg";
+    const defaultUserName = "User Name";
+
+    try {
+      if (storedProfilePicture === null) {
+        await AsyncStorage.setItem(profilePictureKey, defaultProfilePicture);
+      }
+
+      if (storedUserName === null) {
+        await AsyncStorage.setItem(userNameKey, defaultUserName);
+      }
+
+      console.log("Default values stored");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (!appIsReady) {
@@ -42,11 +69,12 @@ const App = () => {
         <Video
           source={require("./assets/splashScreenAnimation.mp4")}
           style={styles.video}
-          resizeMode="cover"
+          resizeMode={ResizeMode.STRETCH}
           onEnd={() => setAppIsReady(true)}
           shouldPlay
           isLooping={false}
         />
+        <StatusBar translucent />
       </View>
     );
   }
