@@ -2,17 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Camera, CameraType } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import {
-  ActivityIndicator,
-  Modal,
   StyleSheet,
   TouchableOpacity,
   View,
+  Animated,
+  Easing,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
 import LabelSearch from "../services/plantScanAnalyze/labelSearch";
-import colors from "../variables/colors";
 import ActivityIndicatorAnimation from "../components/activityIndicatorAnimation";
 
 const PlantScanner = ({ navigation }) => {
@@ -25,6 +23,7 @@ const PlantScanner = ({ navigation }) => {
   const [cameraOpened, setCameraOpened] = useState(true);
   const [zoom, setZoom] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [scanningAnimation] = useState(new Animated.Value(0));
 
   useEffect(() => {
     (async () => {
@@ -36,6 +35,25 @@ const PlantScanner = ({ navigation }) => {
       setHasGalleryPermission(galleryStatus.status === "granted");
     })();
   }, []);
+
+  useEffect(() => {
+    const animate = () => {
+      scanningAnimation.setValue(0);
+      Animated.timing(scanningAnimation, {
+        toValue: 1,
+        duration: 2000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(() => animate());
+    };
+
+    animate();
+  }, [scanningAnimation]);
+
+  const translateY = scanningAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-150, 550],
+  });
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -95,6 +113,15 @@ const PlantScanner = ({ navigation }) => {
             maximumValue={1}
             minimumTrackTintColor="#FFFFFF"
             maximumTrackTintColor="#000000"
+          />
+
+          <Animated.View
+            style={{
+              height: 2,
+              width: "80%",
+              backgroundColor: "white",
+              transform: [{ translateY }],
+            }}
           />
 
           <TouchableOpacity
@@ -186,8 +213,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     height: 100,
     borderRadius: 100,
-    // borderWidth: 5,
-    // borderColor: "white",
     width: "33%",
   },
   closeButton: {
