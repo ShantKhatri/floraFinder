@@ -21,10 +21,9 @@ import HomeScreen from "../../screens/homeScreen";
 import colors from "../../variables/colors";
 import { Ionicons } from "@expo/vector-icons";
 import SearchPlantStack from "../stackNavigator/SearchPlantStack";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import ExploreStack from "../stackNavigator/ExploreStack";
 import { Audio } from "expo-av";
-// import { Settings } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -56,16 +55,14 @@ const BottomTab = () => {
       await sound.replayAsync();
     }
   };
-  const header = (title) => {
+  const header = (title, routeScreen) => {
     return (
       <View
         style={{
-          // height: "10%",
           backgroundColor: colors.secondaryBackground,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          // paddingTop: StatusBar.currentHeight,
           elevation: 5,
           paddingHorizontal: 16,
         }}
@@ -73,7 +70,7 @@ const BottomTab = () => {
         <TouchableOpacity
           onPress={() => {
             playSound();
-            navigation.goBack();
+            navigation.navigate(routeScreen);
           }}
         >
           <Ionicons name="arrow-back-sharp" size={24} color="black" />
@@ -85,13 +82,11 @@ const BottomTab = () => {
           style={styles.scanButton}
           onPress={() => {
             playSound();
-            navigation.navigate("Search", { screen: "PlantScanner" });
+            navigation.navigate("SearchStack", { screen: "PlantScanner" });
           }}
         >
           <Image
             source={require("../../../assets/lens.png")}
-            // width={50}
-            // height={50}
             style={{ borderRadius: 10 }}
           />
         </TouchableOpacity>
@@ -126,7 +121,7 @@ const BottomTab = () => {
           tabBarIcon: ({ color, size }) => (
             <Foundation name="trees" size={36} color={colors.primaryButton} />
           ),
-          header: () => header("Plant of the Day"),
+          header: () => header("Plant of the Day", "HomeStack"),
         }}
       />
       <Tab.Screen
@@ -140,7 +135,7 @@ const BottomTab = () => {
               color={colors.primaryButton}
             />
           ),
-          header: () => header("Explore"),
+          header: () => header("Explore", "Explore"),
         }}
       />
       <Tab.Screen
@@ -170,7 +165,7 @@ const BottomTab = () => {
           tabBarIcon: ({ color, size }) => (
             <Entypo name="leaf" size={36} color={colors.primaryButton} />
           ),
-          header: () => header("Profile"),
+          header: () => header("Profile", "UserProfileScreen"),
         }}
       />
     </Tab.Navigator>
@@ -179,12 +174,6 @@ const BottomTab = () => {
 
 const styles = StyleSheet.create({
   scanButton: {
-    // position: "absolute",
-    // width: 50,
-    // height: 50,
-    // top: 15,
-    // right: 0,
-    // margin: 16,
     backgroundColor: colors.primaryButton,
     borderRadius: 20,
     padding: 4,

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
   Image,
   StyleSheet,
   TextInput,
-  ScrollView,
   FlatList,
   SafeAreaView,
   KeyboardAvoidingView,
@@ -18,14 +16,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import PlantCard from "../components/plantCard";
 import fetchPlant from "../services/fetchPlant";
 import ActivityIndicatorAnimation from "../components/activityIndicatorAnimation";
-import { StatusBar } from "expo-status-bar";
-import colors from "../variables/colors";
 
 const SearchPlantScreen = ({ navigation, route }) => {
   const { plant } = route?.params ? route.params : [];
   const [textResult, setTextResult] = useState(plant || []);
   const [textSearch, setTextSearch] = useState("");
-  const [showCamera, setShowCamera] = useState(true);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -52,7 +47,7 @@ const SearchPlantScreen = ({ navigation, route }) => {
                 key={item.id}
                 plant={item}
                 pressKnowMore={(path) =>
-                  navigation.navigate("Explore", {
+                  navigation.navigate("ExploreStack", {
                     screen: "PlantDetails",
                     params: { plantPath: path },
                   })
@@ -88,43 +83,38 @@ const SearchPlantScreen = ({ navigation, route }) => {
               <FontAwesome name="search" size={24} color="black" />
             </TouchableOpacity>
           </View>
-          <ScrollView
-            style={styles.container}
-            contentContainerStyle={{
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {!loading && (
+
+          {loading ? (
+            <ActivityIndicatorAnimation
+              loadingStatus={loading}
+              style={{ flex: 1 }}
+            />
+          ) : typeof textResult == "undefined" ||
+            textResult == [] ||
+            textResult == null ? (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: 0.5,
+                height: "90%",
+              }}
+            >
+              <Image source={require("../../assets/searchAlter1.png")} />
+            </View>
+          ) : (
+            <View
+              style={styles.container}
+              contentContainerStyle={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <View
                 style={{ alignItems: "center", paddingHorizontal: 20, flex: 1 }}
               >
                 {textResult != [] && textResult != null && serachResult()}
               </View>
-            )}
-
-            {loading && <ActivityIndicatorAnimation loadingStatus={loading} />}
-          </ScrollView>
-          {(typeof textResult == "undefined" ||
-            textResult == [] ||
-            textResult == null) && (
-            <View
-              style={{
-                // flex: 1,
-                alignItems: "center",
-                // marginTop: 250,
-                justifyContent: "center",
-                opacity: 0.5,
-                // backgroundColor: "red",
-                height: "90%",
-                // position: "absolute",
-                // top: "50%",
-                // left: "50%",
-                // transform: [{ translateX: -100 }, { translateY: -100 }],
-              }}
-            >
-              <Image source={require("../../assets/searchAlter1.png")} />
-              {/* <Text style={{ fontSize: 20 }}>No results found</Text> */}
             </View>
           )}
           <TouchableOpacity
@@ -133,8 +123,6 @@ const SearchPlantScreen = ({ navigation, route }) => {
           >
             <Image
               source={require("../../assets/lens.png")}
-              // width={50}
-              // height={50}
               style={{ borderRadius: 10 }}
             />
           </TouchableOpacity>
@@ -149,7 +137,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ECEDE1",
     width: "100%",
-    // paddingTop: StatusBar.height,
   },
   buttonContainer: {
     flex: 0.1,
@@ -158,7 +145,6 @@ const styles = StyleSheet.create({
   },
   button: {},
   buttonText: { fontSize: 18, marginBottom: 10, color: "white" },
-  //   image: { flex: 1 },
   textResult: { flex: 1 },
   searchContainer: {
     flexDirection: "row",

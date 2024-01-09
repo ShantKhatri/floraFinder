@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import { View, StyleSheet, FlatList, Image } from "react-native";
 import PlantCard from "../../components/plantCard";
 import colors from "../../variables/colors";
 import { FavouritesContext } from "../../contexts/FavouritesContext";
@@ -20,12 +20,12 @@ const FavoritePlantsScreen = ({ navigation }) => {
         <FlatList
           data={favouritesArray}
           renderItem={({ item }) => (
-            <View style={{ height: 375, marginBottom: 16 }}>
+            <View style={{ height: 375, marginVertical: 8 }}>
               <PlantCard
                 key={item.id}
                 plant={item}
                 pressKnowMore={(path) =>
-                  navigation.navigate("Explore", {
+                  navigation.navigate("ExploreStack", {
                     screen: "PlantDetails",
                     params: { plantPath: path },
                   })
@@ -44,7 +44,6 @@ const FavoritePlantsScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={{ opacity: 0.5 }}>
         <Image source={require("../../../assets/cryingPlant.png")} />
-        {/* <Text style={{ fontSize: 24 }}>No Favourite Plants</Text> */}
       </View>
     </View>
   );
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 16,
+    paddingHorizontal: 16,
     backgroundColor: colors.primaryBackground,
   },
 });
