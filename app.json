@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splashScreen.png",
       "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#093A2A"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -21,7 +21,8 @@
         "backgroundColor": "#CACFC0"
       },
       "permissions": ["android.permission.RECORD_AUDIO"],
-      "package": "com.prashantkhatri.florafinder"
+      "package": "com.prashantkhatri.florafinder",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
