@@ -1,14 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  ImageBackground,
-  ScrollView,
-  SafeAreaView,
-} from "react-native";
+import { View, StyleSheet, SafeAreaView } from "react-native";
 import PlantOfTheDayCard from "../../components/plantOfTheDayCard";
 import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimation";
 import fetchPlantDetails from "../../services/fetchPlantDetails";
@@ -21,7 +12,6 @@ const PlantDetails = ({ route }) => {
   console.log("plantPath", plantPath);
   const [plantDetails, setPlantDetails] = useState({});
   const [loadingComplete, setLoadingComplete] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   // console.log("DATA");
 
@@ -30,7 +20,7 @@ const PlantDetails = ({ route }) => {
       const data = await fetchPlantDetails(plantPath);
       setPlantDetails(data);
       console.log("DATA", data);
-      setLoading(false);
+      setLoadingComplete(true);
     } catch (error) {
       console.error("Error fetching plants of the day:", error);
     }
@@ -38,31 +28,27 @@ const PlantDetails = ({ route }) => {
 
   useFocusEffect(
     useCallback(() => {
-      setLoading(true);
+      setLoadingComplete(false);
       console.log("USE EFFECT");
       fetchPlant();
     }, [plantPath])
   );
 
   useEffect(() => {
-    setLoading(true);
+    setLoadingComplete(false);
     console.log("USE EFFECT");
     fetchPlant();
   }, [plantPath]);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       setLoadingComplete(true);
-      setLoading(false);
     };
 
     fetchData();
   }, [plantPath]);
-
-  // const image1 = plantDetails[1].image_url;
 
   return (
     <SafeAreaView
@@ -72,19 +58,16 @@ const PlantDetails = ({ route }) => {
         backgroundColor: colors.secondaryBackground,
       }}
     >
-      <View style={{ alignItems: "center", width: "100%" }}>
-        {loadingComplete && (
+      {!loadingComplete ? (
+        <ActivityIndicatorAnimation loadingStatus={!loadingComplete} />
+      ) : (
+        <View style={{ alignItems: "center", width: "100%" }}>
           <PlantOfTheDayCard
             plant={plantDetails}
             key={(item) => item.id + item.scientific_name}
           />
-        )}
-      </View>
-      <View style={{ flex: 1, width: "100%" }}>
-        {!loadingComplete && (
-          <ActivityIndicatorAnimation loadingStatus={loading} />
-        )}
-      </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
