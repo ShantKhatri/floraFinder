@@ -7,18 +7,13 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
-  FlatList,
   ImageBackground,
-  TouchableWithoutFeedback,
 } from "react-native";
-import Modal, { ReactNativeModal } from "react-native-modal";
+import Modal from "react-native-modal";
 import colors from "../variables/colors";
 import FavouriteButton from "./favourite";
-import { useNavigation } from "@react-navigation/native";
 const PlantCard = ({ plant, pressKnowMore }) => {
   const [openModal, setOpenModal] = useState(false);
-
-  const navigation = useNavigation();
 
   const {
     common_name,
@@ -26,7 +21,6 @@ const PlantCard = ({ plant, pressKnowMore }) => {
     image_url,
     synonyms,
     links,
-    id,
     slug,
     year,
     family,
@@ -65,8 +59,6 @@ const PlantCard = ({ plant, pressKnowMore }) => {
           style={{
             zIndex: 1,
             alignSelf: "flex-end",
-            // marginRight: "10%",
-            // marginTop: "5%",
           }}
         >
           <FavouriteButton plant={plant} key={plant.id} />
@@ -88,11 +80,9 @@ const PlantCard = ({ plant, pressKnowMore }) => {
         animationType="slide"
         onRequestClose={() => setOpenModal(!openModal)}
         onSwipeComplete={() => setOpenModal(!openModal)}
-        // swipeDirection={["down"]}
         onBackdropPress={() => setOpenModal(!openModal)}
         coverScreen={true}
         children={true}
-        // // backdropColor="#ECEBDF"
         propagateSwipe={true}
       >
         <ScrollView contentContainerStyle={styles.modalContainer}>
@@ -153,13 +143,9 @@ const PlantCard = ({ plant, pressKnowMore }) => {
           </View> */}
           <View
             style={{
-              // backgroundColor: colors.primaryButton,
               marginBottom: 16,
-              // paddingVertical: 8,
               width: "80%",
               borderRadius: 12,
-              // alignItems: "center",
-              // justifyContent: "center",
             }}
           >
             <Button
@@ -175,16 +161,6 @@ const PlantCard = ({ plant, pressKnowMore }) => {
               color={colors.primaryButton}
             />
           </View>
-          {/* <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                color: colors.secondaryButton,
-              }}
-            >
-              Know More
-            </Text> */}
-          {/* </Button> */}
           <Button
             title="Close"
             onPress={() => setOpenModal(!openModal)}
@@ -276,9 +252,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   synonymContainer: {
-    // marginHorizontal: 10,
     backgroundColor: "#e7f0c3",
-    // padding: 10,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "#c2d6a3",
@@ -292,9 +266,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   synonymItem: {
-    // margin: 8,
-    // padding: 12,
-    // backgroundColor: colors.secondaryButton,
     borderRadius: 8,
     minWidth: 50,
   },

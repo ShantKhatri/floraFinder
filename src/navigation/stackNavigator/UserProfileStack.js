@@ -1,4 +1,3 @@
-// App.js
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import UserProfileScreen from "../../screens/userProfile/userProfile";
@@ -20,8 +19,6 @@ const UserProfileStack = () => {
       <Stack.Screen name="FavoritePlants" component={FavoritePlantsScreen} />
       <Stack.Screen name="CameraImagePicker" component={CameraImagePicker} />
       <Stack.Screen name="UserDetails" component={UserDetails} />
-
-      {/* <Stack.Screen name="ResetPasswordScreen" component={UserProfileScreen} /> */}
     </Stack.Navigator>
   );
 };

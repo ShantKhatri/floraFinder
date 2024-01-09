@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -28,8 +28,6 @@ const UserProfileScreen = ({ navigation }) => {
   const userProfileOptions = [
     { id: 1, name: "Favorite Plants", screen: "FavoritePlants" },
     { id: 2, name: "User Details", screen: "UserDetails" },
-    // { id: 3, name: "Reset Password", screen: "ResetPassword" },
-    // { id: 4, name: "Logout", screen: "Logout" },
   ];
 
   const StoreUserName = async () => {
@@ -108,7 +106,6 @@ const UserProfileScreen = ({ navigation }) => {
                 paddingHorizontal: 8,
                 alignItems: "center",
                 justifyContent: "center",
-                // height: "100%",
                 margin: 0,
                 borderColor: colors.primaryButton,
               }}

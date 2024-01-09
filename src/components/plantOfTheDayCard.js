@@ -17,19 +17,14 @@ const PlantOfTheDayCard = ({ plant }) => {
   console.log(JSON.stringify(plant, null, 2));
   console.log("Links", plant.links);
 
-  const [openModal, setOpenModal] = useState(false);
-
   const {
     slug,
     scientific_name,
     image_url,
-    // family_common_name,
     family,
     observations,
-    // links,
     main_species,
   } = plant;
-  // console.log("MAIN SPECIES", main_species.images);
 
   const mainSpeciesData = [
     { key: "Slug", value: main_species.slug },

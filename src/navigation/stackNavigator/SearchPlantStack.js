@@ -1,4 +1,3 @@
-// App.js
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import PlantScanner from "../../screens/plantScanner";
@@ -16,7 +15,6 @@ const SearchPlantStack = () => {
     >
       <Stack.Screen name="SearchResult" component={SearchPlantScreen} />
       <Stack.Screen name="PlantScanner" component={PlantScanner} />
-      {/* <Stack.Screen name="ResetPasswordScreen" component={UserProfileScreen} /> */}
     </Stack.Navigator>
   );
 };

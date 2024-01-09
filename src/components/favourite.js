@@ -2,10 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { TouchableOpacity, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FavouritesContext } from "../contexts/FavouritesContext";
-import colors from "../variables/colors";
 
 const FavouriteButton = ({ plant }) => {
-  //   console.log("PLANT", plant.id);
   const { favourites, addToFavourites, removeFromFavourites } =
     useContext(FavouritesContext);
   const [isFavourite, setIsFavourite] = useState(
@@ -14,7 +12,6 @@ const FavouriteButton = ({ plant }) => {
   useEffect(() => {
     setIsFavourite(favourites.find((p) => p.id === plant.id));
   }, [favourites]);
-  // let isFavourite = favourites.find((p) => p.id === plant.id);
 
   const handlePress = () => {
     if (!isFavourite) {

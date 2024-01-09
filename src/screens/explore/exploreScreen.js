@@ -10,10 +10,8 @@ import {
 } from "react-native";
 import colors from "../../variables/colors";
 import PlantCard from "../../components/plantCard";
-import fetch from "node-fetch";
 import { AntDesign } from "@expo/vector-icons";
 import fetchCategory from "../../services/fetchCategory";
-import { set } from "date-fns";
 import ActivityIndicatorAnimation from "../../components/activityIndicatorAnimation";
 
 const ExploreScreen = ({ navigation }) => {
@@ -35,7 +33,6 @@ const ExploreScreen = ({ navigation }) => {
       image:
         "https://drive.google.com/uc?export=view&id=1GexmTSCMa1nPpWy2e9IbVb66rswB-N9h",
     },
-    // Add more species as needed
   ];
 
   const renderCategory = ({ item }) => {
@@ -169,12 +166,10 @@ const ExploreScreen = ({ navigation }) => {
           ListFooterComponent={pageNavigation}
         />
       </View>
-      // textResult.map((item) => <PlantCard key={item.id} plant={item} />)
     );
   };
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.primaryBackground }}>
-      {/* {fetchCategory(pageNo, category)} */}
       <View style={styles.categoryContainer}>
         <FlatList
           data={species}
@@ -193,15 +188,12 @@ const styles = StyleSheet.create({
   categoryContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    // marginHorizontal: 20,
     marginVertical: 20,
     borderBottomRightRadius: 10,
     borderBottomLeftRadius: 10,
-    // backgroundColor: colors.secondaryBackground,
     elevation: 2,
   },
   category: {
-    // backgroundColor: "#fff",
     borderRadius: 10,
     alignItems: "center",
     padding: 10,

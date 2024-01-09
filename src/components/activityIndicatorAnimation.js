@@ -24,8 +24,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.primaryBackground,
-    // backgroundColor: "red",
-    // opacity: 0.5,
   },
 });
 
